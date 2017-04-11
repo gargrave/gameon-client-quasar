@@ -1,8 +1,8 @@
 {
-  "name": "quasar-app",
-  "version": "0.0.1",
-  "description": "A Quasar App",
-  "author": "Your Name",
+  "name": "gameon-client",
+  "version": "0.1.0",
+  "description": "Front-end codebase for GameOn app",
+  "author": "Gabe Hargrave",
   "scripts": {
     "clean": "node build/script.clean.js",
     "dev": "node build/script.dev.js",
