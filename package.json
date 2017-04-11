@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Front-end codebase for GameOn app",
   "author": "Gabe Hargrave",
+  "private": true,
   "scripts": {
     "clean": "node build/script.clean.js",
     "dev": "node build/script.dev.js",
@@ -10,14 +11,17 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "axios": "^0.16.1",
     "babel-runtime": "^6.0.0",
     "fastclick": "^1.0.6",
+    "lodash": "^4.17.4",
     "material-design-icons": "^3.0.1",
     "moment": "^2.15.0",
     "quasar-framework": "^0.13.4",
     "roboto-fontface": "^0.7.0",
     "vue": "^2.2.2",
-    "vue-router": "^2.0.0"
+    "vue-router": "^2.0.0",
+    "vuex": "^2.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
