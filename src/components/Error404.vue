@@ -8,9 +8,10 @@
         <i class="text-grey-5">error_outline</i>
         <p class="caption text-center">Oops. Nothing here...</p>
         <p class="text-center group">
-          <button v-if="canGoBack" class="grey push small" @click="goBack">
-            <i class="on-left">keyboard_arrow_left</i>
-            Go back
+          <button v-if="canGoBack"
+                  class="grey push small"
+                  @click="goBack">
+            <i class="on-left">keyboard_arrow_left</i> Go back
           </button>
           <router-link to="/">
             <button class="grey push small">
@@ -31,6 +32,7 @@ export default {
       canGoBack: window.history.length > 1
     }
   },
+
   methods: {
     goBack () {
       window.history.go(-1)
