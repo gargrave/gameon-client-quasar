@@ -3,6 +3,11 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+import { localUrls, routes } from './globals/urls'
+
+import GamesListPage from './components/games/GamesListPage'
+import PlatformsListPage from './components/platforms/PlatformsListPage'
+
 function load (component) {
   return () => System.import(`components/${component}.vue`)
 }
@@ -21,6 +26,24 @@ export default new VueRouter({
    */
 
   routes: [
+    /* ============================================
+     = Games routes
+     ============================================= */
+    {
+      path: localUrls.gamesList,
+      component: GamesListPage,
+      name: routes.games.list
+    },
+
+    /* ============================================
+     = Platforms routes
+     ============================================= */
+    {
+      path: localUrls.platformsList,
+      component: PlatformsListPage,
+      name: routes.platforms.list
+    },
+
     { path: '/', component: load('Index') }, // Default
     { path: '*', component: load('Error404') } // Not found
   ]
