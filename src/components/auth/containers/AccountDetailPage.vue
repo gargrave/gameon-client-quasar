@@ -9,9 +9,34 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
+import { localUrls } from '../../../globals/urls'
+
 export default {
   data () {
-    return {}
+    return {
+      // whether any operations are currently running
+      working: false
+    }
+  },
+
+  methods: {
+    ...mapActions([
+      'checkForStoredLogin'
+    ])
+  },
+
+  created () {
+    // redirect to login page if not logged in
+    this.working = true
+    this.checkForStoredLogin()
+      .then(res => {
+        this.working = false
+      }, () => {
+        this.$router.push(localUrls.login)
+        this.working = false
+      })
   }
 }
 </script>
