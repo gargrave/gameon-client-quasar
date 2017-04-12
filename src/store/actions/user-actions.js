@@ -68,7 +68,8 @@ export default {
    */
   logout ({ getters, dispatch, commit }) {
     return new Promise((resolve, reject) => {
-      reject('not implemented yet')
+      commit(USER.LOGOUT)
+      resolve()
     })
   },
 

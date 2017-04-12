@@ -3,6 +3,11 @@
     <div class="row justify-center small-gutter">
       <div>
         <h5>AccountDetailPage</h5>
+        <button
+          class="primary outline"
+          @click="onLogout">
+            Logout
+        </button>
       </div>
     </div>
   </div>
@@ -22,8 +27,18 @@ export default {
   },
 
   methods: {
+    onLogout () {
+      this.working = true
+      this.logout()
+        .then(() => {
+          this.$router.push(localUrls.login)
+          this.working = false
+        })
+    },
+
     ...mapActions([
-      'checkForStoredLogin'
+      'checkForStoredLogin',
+      'logout'
     ])
   },
 
@@ -31,7 +46,7 @@ export default {
     // redirect to login page if not logged in
     this.working = true
     this.checkForStoredLogin()
-      .then(res => {
+      .then(() => {
         this.working = false
       }, () => {
         this.$router.push(localUrls.login)

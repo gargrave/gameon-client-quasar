@@ -44,7 +44,14 @@ export default {
   /** Mock implementation of logout method; clears user data. */
   logout ({ getters, dispatch, commit }) {
     return new Promise((resolve, reject) => {
-      reject('not implemented yet')
+      commit(USER.AJAX_BEGIN)
+
+      mockApi.logout()
+        .then(() => {
+          commit(USER.LOGOUT)
+          commit(USER.AJAX_END)
+          resolve()
+        })
     })
   },
 

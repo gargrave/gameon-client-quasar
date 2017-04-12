@@ -21,7 +21,7 @@ let appEnv = ENV.PROD;
 })()
 
 const IS_TEST_ENV = process.env.NODE_ENV === 'testing'
-const ENABLE_MOCK_API = true
+const ENABLE_MOCK_API = false
 
 export default {
   mockApiDelay: IS_TEST_ENV ? 0 : 350,
