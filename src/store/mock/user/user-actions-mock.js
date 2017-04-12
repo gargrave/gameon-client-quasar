@@ -28,7 +28,7 @@ export default {
           }
         }, err => {
           // if error, reject with error message
-          const errCode = err.response.data.name
+          const errCode = err.response.data.name || ''
           let errorMessage = errMsg.unknown
 
           if (errCode === apiErrors.notAuthenticated) {
@@ -42,7 +42,7 @@ export default {
   },
 
   /** Mock implementation of logout method; clears user data. */
-  logout ({ getters, dispatch, commit }) {
+  logout ({ commit }) {
     return new Promise((resolve, reject) => {
       commit(USER.AJAX_BEGIN)
 
