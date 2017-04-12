@@ -79,6 +79,7 @@ export default {
     /** logout current user; simply clear existing user data */
     [USER.LOGOUT] (state) {
       state.user = getEmptyUser()
+      state.authToken = ''
 
       if (!env.isTesting()) {
         localStorage.clear()

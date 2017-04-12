@@ -66,7 +66,7 @@ export default {
    * to logout, but the local data will be cleared and the Promise will resolve
    * no matter what response the API sends.
    */
-  logout ({ getters, dispatch, commit }) {
+  logout ({ commit }) {
     return new Promise((resolve, reject) => {
       commit(USER.LOGOUT)
       resolve()
@@ -79,7 +79,29 @@ export default {
    */
   createUser ({ dispatch, commit }, userData) {
     return new Promise((resolve, reject) => {
-      reject('not implemented yet')
+      commit(USER.AJAX_BEGIN)
+      axios({
+        method: 'post',
+        headers: {
+          'Accept': 'application/json'
+        },
+        url: apiUrls.user,
+        data: userData
+      })
+      .then(res => {
+        // if successful, immediately submit a login request
+        dispatch('login', userData)
+          .then(() => {
+            resolve()
+          }, err => {
+            reject(err)
+          })
+      })
+      .catch(err => {
+        console.log('err:')
+        console.log(err)
+        reject(err)
+      })
     })
   },
 
