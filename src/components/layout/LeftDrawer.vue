@@ -7,16 +7,26 @@
           GameOn
         </div>
       </div>
-      <hr>
 
+      <hr>
       <div class="list-label">Navigation</div>
-      <q-drawer-link icon="games" to="/games">My Games</q-drawer-link>
-      <q-drawer-link icon="radio" to="/platforms">My Platforms</q-drawer-link>
+      <q-drawer-link icon="games" :to="{ name: routes.games.list }">My Games</q-drawer-link>
+      <q-drawer-link icon="radio" :to="{ name: routes.platforms.list }">My Platforms</q-drawer-link>
+
+      <hr>
+      <q-drawer-link icon="radio" :to="{ name: routes.auth.detail }">Account</q-drawer-link>
     </div>
   </q-drawer>
 </template>
 
 <script>
+import { routes } from '../../globals/urls'
+
 export default {
+  data () {
+    return {
+      routes // expose to template
+    }
+  }
 }
 </script>
