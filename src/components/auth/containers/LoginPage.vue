@@ -20,6 +20,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { Toast } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
@@ -55,6 +56,7 @@ export default {
 
       this.login(user)
         .then(() => {
+          Toast.create.positive('Logged in.')
           this.$router.push(localUrls.gamesList)
           this.working = false
         }, err => {

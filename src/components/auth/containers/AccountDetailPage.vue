@@ -15,6 +15,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { Toast } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
@@ -31,6 +32,7 @@ export default {
       this.working = true
       this.logout()
         .then(() => {
+          Toast.create.info('Logged out!')
           this.$router.push(localUrls.login)
           this.working = false
         })
