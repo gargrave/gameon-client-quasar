@@ -7,8 +7,6 @@ import mockData from './user-data-mock'
 let mockUser = mockData.user
 let mockPassword = mockData.password
 
-verboseLog('INFO: Mock User API Enabled')
-
 export default {
   /**
    * Mock implement of API's login method

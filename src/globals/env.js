@@ -1,3 +1,5 @@
+import { verboseLog } from './utils'
+
 const ENV = {
   DEV: 0,
   STAGING: 1,
@@ -44,6 +46,10 @@ export default {
   },
 
   useMockApi () {
-    return IS_TEST_ENV || (ENABLE_MOCK_API && appEnv === ENV.DEV)
+    const USE_MOCK_API = IS_TEST_ENV || (ENABLE_MOCK_API && appEnv === ENV.DEV)
+    if (USE_MOCK_API) {
+      verboseLog('INFO: Mock API Enabled')
+    }
+    return USE_MOCK_API
   }
 }
