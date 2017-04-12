@@ -5,7 +5,12 @@ Vue.use(VueRouter)
 
 import { localUrls, routes } from './globals/urls'
 
+import AccountCreatePage from './components/auth/containers/AccountCreatePage'
+import AccountDetailPage from './components/auth/containers/AccountDetailPage'
+import LoginPage from './components/auth/containers/LoginPage'
+
 import GamesListPage from './components/games/GamesListPage'
+
 import PlatformsListPage from './components/platforms/PlatformsListPage'
 
 function load (component) {
@@ -26,6 +31,25 @@ export default new VueRouter({
    */
 
   routes: [
+    /* ============================================
+     = Auth routes
+     ============================================= */
+    {
+      path: localUrls.login,
+      component: LoginPage,
+      name: routes.auth.login
+    },
+    {
+      path: localUrls.account,
+      component: AccountDetailPage,
+      name: routes.auth.detail
+    },
+    {
+      path: localUrls.accountCreate,
+      component: AccountCreatePage,
+      name: routes.auth.create
+    },
+
     /* ============================================
      = Games routes
      ============================================= */
