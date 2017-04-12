@@ -3,6 +3,7 @@ import env from '../../globals/env'
 import { USER } from '../mutation-types'
 
 import actions from '../actions/user-actions'
+import mockActions from '../mock/user/user-actions-mock'
 
 function getEmptyUser () {
   return {
@@ -85,5 +86,5 @@ export default {
     }
   },
 
-  actions: actions
+  actions: env.useMockApi() ? mockActions : actions
 }
