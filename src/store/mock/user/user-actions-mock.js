@@ -9,19 +9,19 @@ export default {
       commit(USER.AJAX_BEGIN)
 
       mockApi.login(credentials)
-        .then((res) => {
+        .then(res => {
           // if no error, login locally with returned user data
           const userData = res.data.data
           const authToken = res.data.token
 
           if (authToken) {
             dispatch('loadUserDataFromToken', authToken)
-              .then((res) => {
+              .then(res => {
                 userData.authToken = authToken
                 commit(USER.LOGIN, userData)
                 commit(USER.AJAX_END)
                 resolve()
-              }, (err) => {
+              }, err => {
                 commit(USER.AJAX_END)
                 reject(err)
               })
@@ -57,7 +57,20 @@ export default {
 
   createUser ({ dispatch, commit }, userData) {
     return new Promise((resolve, reject) => {
-      reject('TODO: Not implemented')
+      commit(USER.AJAX_BEGIN)
+
+      mockApi.createUser(userData)
+        .then(res => {
+          // if successful, immediately submit a login request
+          dispatch('login', userData)
+            .then(() => {
+              resolve()
+            }, err => {
+              reject(err)
+            })
+        }, err => {
+          reject(err)
+        })
     })
   },
 

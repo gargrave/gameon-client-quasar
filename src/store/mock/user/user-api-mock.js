@@ -50,9 +50,19 @@ export default {
     })
   },
 
-  createUser (userData) {
+  createUser ({ email, password }) {
+    verboseLog('Mock User API -> createUser()')
+
     return new Promise((resolve, reject) => {
-      reject('TODO: Not implemented')
+      const user = {
+        id: mockData.nextId++,
+        email,
+        password,
+        createdAt: '2017-04-10T22:04:03.670594Z'
+      }
+
+      mockData.users.push(user)
+      resolve(user)
     })
   }
 }
