@@ -6,7 +6,7 @@
         <app-title-bar></app-title-bar>
       </div>
 
-      <app-left-drawer></app-left-drawer>
+      <app-side-nav></app-side-nav>
 
       <router-view></router-view>
 
@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import LeftDrawer from './components/layout/LeftDrawer'
+import SideNav from './components/layout/SideNav'
 import TitleBar from './components/layout/TitleBar'
 
 export default {
   components: {
-    appLeftDrawer: LeftDrawer,
+    appSideNav: SideNav,
     appTitleBar: TitleBar
   }
 }
