@@ -4,27 +4,30 @@ import { verboseLog } from '../../../globals/utils'
 import { types, getMockError } from '../mock-errors'
 import mockData from './user-data-mock'
 
-let mockUser = mockData.user
-let mockPassword = mockData.password
-
 export default {
   /**
    * Mock implement of API's login method
-   * If credentials match the mock user, authenticate as expected and resolve with the token.
+   * If credentials match a mock user, authenticate as expected and resolve with the token.
    * Otherwise, reject.
    */
   login ({ email, password }) {
     verboseLog('LOG: Mock User API -> login()')
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (email === mockUser.email && password === mockPassword) {
+        const users = mockData.users
+        const user = users.find(u => {
+          return u.email === email && u.password === password
+        })
+
+        if (user) {
           resolve({
             data: {
               data: {
-                id: mockUser.id,
-                email: mockUser.email,
-                createdAt: mockUser.createdAt,
-                updatedAt: mockUser.createdAt
+                id: user.id,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.createdAt
               },
               token: mockData.authToken
             }
@@ -39,6 +42,7 @@ export default {
   /** Mock implement of API's logout method; nothing needed here beyond the Promise resolution. */
   logout () {
     verboseLog('Mock User API -> logout()')
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve()
@@ -46,15 +50,9 @@ export default {
     })
   },
 
-  /**
-   * Mock implement of API's 'fetch Profile' method. Simply return the mock user profile. */
-  profile () {
+  createUser (userData) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          body: mockData.profile
-        })
-      }, env.mockApiDelay / 2)
+      reject('TODO: Not implemented')
     })
   }
 }
