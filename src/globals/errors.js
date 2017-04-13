@@ -1,5 +1,17 @@
 import { Toast } from 'quasar'
 
+/* ============================================
+ = Validation Errors
+ ============================================= */
+
+export const valErrs = {
+  email: 'Must be a valid email address.',
+  password: 'Must be at least 6 characters long.'
+}
+
+/* ============================================
+ = API Errors
+ ============================================= */
 const apiErrorNames = {
   generalError: 'GeneralError',
   badRequest: 'BadRequest',

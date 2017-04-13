@@ -20,6 +20,7 @@
     "moment": "^2.15.0",
     "quasar-framework": "^0.13.4",
     "roboto-fontface": "^0.7.0",
+    "validator": "^7.0.0",
     "vue": "^2.2.2",
     "vue-router": "^2.0.0",
     "vuex": "^2.2.1"
