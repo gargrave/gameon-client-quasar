@@ -7,9 +7,11 @@
       <input
         type="text"
         class="form-control"
+        :class="{ 'has-error': errors.email }"
         name="email"
         placeholder="Email"
         v-model.trim="newAccountData.email">
+      <p class="form-error">{{ errors.email }}</p>
     </div>
 
     <!-- password input -->
@@ -18,9 +20,11 @@
       <input
         type="password"
         class="form-control"
+        :class="{ 'has-error': errors.password }"
         name="password"
         placeholder="Password"
         v-model.trim="newAccountData.password">
+      <p class="form-error">{{ errors.password }}</p>
     </div>
 
     <!-- submit button -->
@@ -47,6 +51,12 @@ export default {
     working: {
       type: Boolean,
       required: true
+    },
+
+    // collection of validation errors
+    errors: {
+      type: Object,
+      required: true
     }
   },
 
@@ -62,7 +72,6 @@ export default {
 
   methods: {
     onSubmit () {
-      // TODO need to validate before submisstion
       this.$emit('submitted', this.newAccountData)
     },
 

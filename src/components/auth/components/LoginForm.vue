@@ -73,7 +73,6 @@ export default {
 
   methods: {
     onSubmit () {
-      // TODO need to validate before submisstion
       this.$emit('submitted', this.loginData)
     },
 

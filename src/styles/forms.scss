@@ -1,3 +1,5 @@
+@import 'variables';
+
 .form-group {
   margin-bottom: 1rem;
   width: 100%;
@@ -11,11 +13,14 @@
 .form-group > .form-control {
   display: block;
   width: 100%;
-  font-size: 1rem;
   line-height: 1.25;
 }
 
 .form-group > .form-error {
   font-size: .8rem;
-  color: #db2828;
+  color: $errTextColor;
+}
+
+.apiError {
+  color: $errTextColor;
 }

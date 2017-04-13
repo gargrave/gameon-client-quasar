@@ -8,7 +8,7 @@
         </div><!-- /card-title -->
 
         <div class="card-content">
-          <p v-if="apiError" style="color: red;">Error: {{ apiError }}</p>
+          <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
           <app-login-form
             :working="working"
             :errors="validationErrors"
@@ -42,6 +42,7 @@ export default {
       // whether any operations are currently running
       working: false,
 
+      // form validation errors (if any)
       validationErrors: {
         email: '',
         password: ''
@@ -100,7 +101,7 @@ export default {
 
       // validate password
       this.validationErrors.password = ''
-      if (!validator.isEmail(val.password)) {
+      if (!validator.isLength(val.password, { min: 6 })) {
         this.validationErrors.password = valErrs.password
         valid = false
       }
