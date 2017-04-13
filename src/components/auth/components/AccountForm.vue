@@ -2,23 +2,39 @@
   <form @submit.prevent="onSubmit">
 
     <!-- email input -->
-    <input
-      type="text"
-      class="form-item"
-      name="email"
-      placeholder="Email"
-      v-model.trim="newAccountData.email">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        name="email"
+        placeholder="Email"
+        v-model.trim="newAccountData.email">
+    </div>
 
     <!-- password input -->
-    <input
-      type="password"
-      class="form-item"
-      name="password"
-      placeholder="Password"
-      v-model.trim="newAccountData.password">
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        name="password"
+        placeholder="Password"
+        v-model.trim="newAccountData.password">
+    </div>
 
-    <button class="primary outline" type="submit">
+    <!-- submit button -->
+    <button
+      class="primary outline"
+      type="submit">
       Submit
+    </button>
+
+    <!-- cancel/back button -->
+    <button
+      class="secondary outline pull-right"
+      @click.prevent="onCancel">
+      Log In
     </button>
 
   </form>
@@ -56,9 +72,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.form-item {
-  display: block;
-}
-</style>

@@ -1,21 +1,24 @@
 <template>
   <div class="layout-view">
-    <div class="row justify-center small-gutter">
-      <div>
+    <div class="row justify-center">
+      <div class="card">
 
-        <h5>AccountCreatePage</h5>
+        <div class="card-title bg-primary text-white">
+          Sign Up
+        </div><!-- /card-title -->
 
-        <p v-if="apiError" style="color: red;">Error: {{ apiError }}</p>
+        <div class="card-content">
+          <p v-if="apiError" style="color: red;">Error: {{ apiError }}</p>
+          <app-account-form
+            :working="working"
+            @submitted="onFormSubmitted"
+            @cancelled="onFormCancelled">
+          </app-account-form>
+        </div><!-- /card-content -->
 
-        <app-account-form
-          :working="working"
-          @submitted="onFormSubmitted"
-          @cancelled="onFormCancelled">
-        </app-account-form>
-
-      </div>
-    </div>
-  </div>
+      </div><!-- /card -->
+    </div><!-- /row -->
+  </div><!-- /layout-view -->
 </template>
 
 <script>

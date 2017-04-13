@@ -13,6 +13,8 @@ import store from './store/store'
 
 Vue.use(Quasar) // Install Quasar Framework
 
+import './styles/index.scss'
+
 Quasar.start(() => {
   /* eslint-disable no-new */
   new Vue({

@@ -1,21 +1,24 @@
 <template>
   <div class="layout-view">
-    <div class="row justify-center small-gutter">
-      <div>
+    <div class="row justify-center">
+      <div class="card">
 
-        <h5>LoginPage</h5>
+        <div class="card-title bg-primary text-white">
+          Log In
+        </div><!-- /card-title -->
 
-        <p v-if="apiError" style="color: red;">Error: {{ apiError }}</p>
+        <div class="card-content">
+          <p v-if="apiError" style="color: red;">Error: {{ apiError }}</p>
+          <app-login-form
+            :working="working"
+            @submitted="onFormSubmitted"
+            @cancelled="onFormCancelled">
+          </app-login-form>
+        </div><!-- /card-content -->
 
-        <app-login-form
-          :working="working"
-          @submitted="onFormSubmitted"
-          @cancelled="onFormCancelled">
-        </app-login-form>
-
-      </div>
-    </div>
-  </div>
+      </div><!-- /card -->
+    </div><!-- /row -->
+  </div><!-- /layout-view -->
 </template>
 
 <script>
