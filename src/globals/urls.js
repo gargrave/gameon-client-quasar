@@ -44,6 +44,7 @@ export let apiUrls = {
   login: `${apiRoot}/auth/local/`,
   logout: `${apiRoot}/auth/logout/`,
   user: `${apiRoot}/users/`,
+  profiles: `${restApiRoot}/profiles/`,
   games: `${restApiRoot}/games/`,
   platforms: `${restApiRoot}/platforms/`
 }

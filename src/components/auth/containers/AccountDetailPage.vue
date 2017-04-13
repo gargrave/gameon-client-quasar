@@ -2,7 +2,11 @@
   <div class="layout-view">
     <div class="row justify-center small-gutter">
       <div>
-        <h5>AccountDetailPage</h5>
+        <h5>My Profile</h5>
+
+        <p>First name: {{ profile.firstName }}</p>
+        <p>Last name: {{ profile.lastName }}</p>
+
         <button
           class="primary outline"
           @click="onLogout">
@@ -14,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { Toast } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
@@ -25,6 +29,12 @@ export default {
       // whether any operations are currently running
       working: false
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'profile'
+    ])
   },
 
   methods: {

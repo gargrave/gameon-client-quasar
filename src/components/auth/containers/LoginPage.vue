@@ -59,14 +59,16 @@ export default {
           Toast.create.positive('Logged in.')
           this.$router.push(localUrls.gamesList)
           this.working = false
-        }, err => {
-          this.apiError = err
-          this.working = false
-        })
+        }, err => { this.onError(err) })
     },
 
     onFormCancelled (value, event) {
       this.$router.push(localUrls.accountCreate)
+    },
+
+    onError (err) {
+      this.apiError = err.message || ''
+      this.working = false
     },
 
     ...mapActions([
@@ -82,10 +84,7 @@ export default {
       .then(() => {
         this.$router.push(localUrls.account)
         this.working = false
-      }, err => {
-        this.apiError = err
-        this.working = false
-      })
+      }, err => { this.onError(err) })
   }
 }
 </script>

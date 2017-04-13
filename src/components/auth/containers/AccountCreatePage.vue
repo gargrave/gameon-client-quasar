@@ -22,7 +22,6 @@
 import { mapActions } from 'vuex'
 import { Toast } from 'quasar'
 
-import { apiErrors, errMsg } from '../../../globals/errors'
 import { localUrls } from '../../../globals/urls'
 
 import AccountForm from '../components/AccountForm'
@@ -60,29 +59,16 @@ export default {
           Toast.create.positive('Account created!')
           this.$router.push(localUrls.gamesList)
           this.working = false
-        }, err => {
-          this.handleApiErrors(err)
-          this.working = false
-        })
+        }, err => { this.onError(err) })
     },
 
     onFormCancelled (value, event) {
       this.$router.push(localUrls.accountCreate)
     },
 
-    handleApiErrors (err) {
-      this.apiError = err
-
-      const errCode = err.response.data.name || ''
-      let errorMessage = errMsg.unknown
-
-      if (errCode === apiErrors.generalError) {
-        errorMessage = err.response.data.message
-      } else if (errCode === apiErrors.badRequest) {
-        errorMessage = errMsg.validation
-      }
-
-      this.apiError = errorMessage
+    onError (err) {
+      this.apiError = err.message || ''
+      this.working = false
     },
 
     ...mapActions([
@@ -99,10 +85,7 @@ export default {
       .then(() => {
         this.$router.push(localUrls.account)
         this.working = false
-      }, err => {
-        this.apiError = err
-        this.working = false
-      })
+      }, err => { this.onError(err) })
   }
 }
 </script>

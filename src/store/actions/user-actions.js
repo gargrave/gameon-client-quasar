@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
-import { apiErrors, errMsg } from '../../globals/errors'
+import { parseError, cleanErrors } from '../../globals/errors'
 import { PROFILE, USER } from '../mutation-types'
 
 export default {
@@ -31,34 +31,19 @@ export default {
         const profile = res.data.data.profile
         const authToken = res.data.token
 
-        if (authToken) {
-          dispatch('loadUserDataFromToken', authToken)
-            .then(() => {
-              userData.authToken = authToken
-              commit(USER.LOGIN, userData)
-              commit(PROFILE.FETCH_SUCCESS, profile)
-              commit(USER.AJAX_END)
-              resolve()
-            }, err => {
-              commit(USER.AJAX_END)
-              reject(err)
-            })
+        if (userData.id && profile.id && authToken) {
+          commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
+          commit(PROFILE.FETCH_SUCCESS, profile)
+          commit(USER.AJAX_END)
+          resolve()
         } else {
           commit(USER.AJAX_END)
-          reject(errMsg[apiErrors.invalidLogin])
+          reject(cleanErrors.INVALID_LOGIN)
         }
       })
       .catch(err => {
-        // if error, reject with error message
-        const errCode = err.response.data.name
-        let errorMessage = errMsg.unknown
-
-        if (errCode === apiErrors.notAuthenticated) {
-          errorMessage = errMsg[apiErrors.invalidLogin]
-        }
-
         commit(USER.AJAX_END)
-        reject(errorMessage)
+        reject(parseError(err))
       })
     })
   },
@@ -71,6 +56,7 @@ export default {
   logout ({ commit }) {
     return new Promise((resolve, reject) => {
       commit(USER.LOGOUT)
+      commit(PROFILE.LOGOUT)
       resolve()
     })
   },
@@ -100,7 +86,9 @@ export default {
           })
       })
       .catch(err => {
-        reject(err)
+        // if error, reject with error message
+        commit(USER.AJAX_END)
+        reject(parseError(err))
       })
     })
   },
@@ -109,10 +97,57 @@ export default {
    * Attempts to fetch user data from the API with the supplied auth token.
    * If the attempt is successful, the returned data is committed to localStorage.
    */
-  loadUserDataFromToken ({ getters, dispatch, commit }, authToken) {
+  loadUserDataFromToken ({ dispatch, commit }, authToken) {
+    // GET request to User API endpoint
+    function userReq () {
+      return axios({
+        method: 'get',
+        headers: {
+          'Authorization': authToken
+        },
+        url: apiUrls.user
+      })
+    }
+
+    // GET request to Profile API endpoint
+    function profileReq () {
+      return axios({
+        method: 'get',
+        headers: {
+          'Authorization': authToken
+        },
+        url: apiUrls.profiles
+      })
+    }
+
+    commit(USER.AJAX_BEGIN)
+    commit(PROFILE.AJAX_BEGIN)
+
     return new Promise((resolve, reject) => {
-      console.log('TODO: Need to implement loading user Profile')
-      resolve()
+      axios.all([userReq(), profileReq()])
+        .then(res => {
+          const userData = res[0].data.data[0]
+          const profile = res[1].data.data[0]
+
+          if (userData.id && profile.id) {
+            commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
+            commit(PROFILE.FETCH_SUCCESS, profile)
+            commit(USER.AJAX_END)
+            commit(PROFILE.AJAX_END)
+            resolve()
+          } else {
+            commit(USER.AJAX_END)
+            commit(PROFILE.AJAX_END)
+            return dispatch('logout')
+          }
+        })
+        .catch(err => {
+          // if error, reject with error message
+          dispatch('logout')
+          commit(USER.AJAX_END)
+          commit(PROFILE.AJAX_END)
+          reject(parseError(err))
+        })
     })
   },
 
@@ -135,7 +170,7 @@ export default {
             })
         }
       } else {
-        reject()
+        reject(cleanErrors.EMPTY)
       }
     })
   }

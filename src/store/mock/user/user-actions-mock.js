@@ -1,5 +1,5 @@
 import mockApi from './user-api-mock'
-import { apiErrors, errMsg } from '../../../globals/errors'
+import { parseError } from '../../../globals/errors'
 import { USER } from '../../mutation-types'
 
 export default {
@@ -28,20 +28,15 @@ export default {
           }
         }, err => {
           // if error, reject with error message
-          const errCode = err.response.data.name || ''
-          let errorMessage = errMsg.unknown
-
-          if (errCode === apiErrors.notAuthenticated) {
-            errorMessage = errMsg[apiErrors.invalidLogin]
-          }
-
           commit(USER.AJAX_END)
-          reject(errorMessage)
+          reject(parseError(err))
         })
     })
   },
 
-  /** Mock implementation of logout method; clears user data. */
+  /**
+   * Mock implementation of logout method; clears user data.
+   */
   logout ({ commit }) {
     return new Promise((resolve, reject) => {
       commit(USER.AJAX_BEGIN)
@@ -55,6 +50,9 @@ export default {
     })
   },
 
+  /**
+   * Mock implementation of createUser method; creates a new user object on the mock API.
+   */
   createUser ({ dispatch, commit }, userData) {
     return new Promise((resolve, reject) => {
       commit(USER.AJAX_BEGIN)
