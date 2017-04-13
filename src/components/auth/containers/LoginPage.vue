@@ -65,7 +65,6 @@ export default {
         }
 
         this.working = true
-        this.apiError = ''
 
         this.login(userPayload)
           .then(() => {
@@ -81,6 +80,7 @@ export default {
     },
 
     onError (err) {
+      this.validationErrors = { email: '', password: '' }
       this.apiError = err.message || ''
       this.working = false
     },

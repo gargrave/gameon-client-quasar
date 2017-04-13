@@ -2,30 +2,21 @@
   <form @submit.prevent="onSubmit">
 
     <!-- email input -->
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input
-        type="text"
-        class="form-control"
-        :class="{ 'has-error': errors.email }"
-        name="email"
-        placeholder="Email"
-        v-model.trim="loginData.email">
-      <p class="form-error">{{ errors.email }}</p>
-    </div>
+    <app-text-input
+      ref="email"
+      name="email"
+      label="Email"
+      :error="errors.email">
+    </app-text-input>
 
     <!-- password input -->
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        :class="{ 'has-error': errors.password }"
-        name="password"
-        placeholder="Password"
-        v-model.trim="loginData.password">
-      <p class="form-error">{{ errors.password }}</p>
-    </div>
+    <app-text-input
+      ref="password"
+      type="password"
+      name="password"
+      label="Password"
+      :error="errors.password">
+    </app-text-input>
 
 
     <!-- 'submit' button -->
@@ -46,7 +37,13 @@
 </template>
 
 <script>
+import TextInput from '../../common/forms/TextInput'
+
 export default {
+  components: {
+    appTextInput: TextInput
+  },
+
   props: {
     // whether any operations are currently running
     working: {
@@ -61,19 +58,13 @@ export default {
     }
   },
 
-  data () {
-    return {
-      // the current data entered into the form
-      loginData: {
-        email: '',
-        password: ''
-      }
-    }
-  },
-
   methods: {
     onSubmit () {
-      this.$emit('submitted', this.loginData)
+      const payload = {
+        email: this.$refs.email.model,
+        password: this.$refs.password.model
+      }
+      this.$emit('submitted', payload)
     },
 
     onCancel () {
