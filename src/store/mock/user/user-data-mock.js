@@ -9,15 +9,8 @@ let users = [{
   password: 'password'
 }]
 
-let profile = {
-  id: nextId++,
-  firstName: 'Mock',
-  lastName: 'Yeah'
-}
-
 export default {
   nextId,
   authToken,
-  users,
-  profile
+  users
 }

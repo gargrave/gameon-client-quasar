@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
 import { apiErrors, errMsg } from '../../globals/errors'
-import { USER } from '../mutation-types'
+import { PROFILE, USER } from '../mutation-types'
 
 export default {
   /**
@@ -28,6 +28,7 @@ export default {
       .then(res => {
         // if no error, login locally with returned user data
         const userData = res.data.data
+        const profile = res.data.data.profile
         const authToken = res.data.token
 
         if (authToken) {
@@ -35,6 +36,7 @@ export default {
             .then(() => {
               userData.authToken = authToken
               commit(USER.LOGIN, userData)
+              commit(PROFILE.FETCH_SUCCESS, profile)
               commit(USER.AJAX_END)
               resolve()
             }, err => {
