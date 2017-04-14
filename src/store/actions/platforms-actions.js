@@ -17,7 +17,7 @@ export default {
         reject(cleanErrors.INVALID_TOKEN)
       }
 
-      const request = apiHelper.buildRequest('get', apiUrls.platforms, authToken)
+      const request = apiHelper.axGet(apiUrls.platforms, authToken)
       commit(PLATFORMS.AJAX_BEGIN)
 
       axios(request)
@@ -67,8 +67,7 @@ export default {
         reject(cleanErrors.INVALID_TOKEN)
       }
 
-      const request = apiHelper.buildRequest(
-        'get', `${apiUrls.platforms}${id}`, authToken)
+      const request = apiHelper.axGet(`${apiUrls.platforms}${id}`, authToken)
       commit(PLATFORMS.AJAX_BEGIN)
 
       axios(request)
