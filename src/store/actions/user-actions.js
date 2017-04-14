@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
+import { apiHelper } from '../../globals/utils'
 import { parseError, cleanErrors } from '../../globals/errors'
 import { PLATFORMS, PROFILE, USER } from '../mutation-types'
 
@@ -16,35 +17,30 @@ export default {
    */
   login ({ dispatch, commit }, credentials) {
     return new Promise((resolve, reject) => {
+      const request = apiHelper.axPost(apiUrls.login, credentials)
       commit(USER.AJAX_BEGIN)
-      axios({
-        method: 'post',
-        headers: {
-          'Accept': 'application/json'
-        },
-        url: apiUrls.login,
-        data: credentials
-      })
-      .then(res => {
-        // if no error, login locally with returned user data
-        const userData = res.data.data
-        const profile = res.data.data.profile
-        const authToken = res.data.token
 
-        if (userData.id && profile.id && authToken) {
-          commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
-          commit(PROFILE.FETCH_SUCCESS, profile)
+      axios(request)
+        .then(res => {
+          // if no error, login locally with returned user data
+          const userData = res.data.data
+          const profile = res.data.data.profile
+          const authToken = res.data.token
+
+          if (userData.id && profile.id && authToken) {
+            commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
+            commit(PROFILE.FETCH_SUCCESS, profile)
+            commit(USER.AJAX_END)
+            resolve()
+          } else {
+            commit(USER.AJAX_END)
+            reject(cleanErrors.INVALID_LOGIN)
+          }
+        })
+        .catch(err => {
           commit(USER.AJAX_END)
-          resolve()
-        } else {
-          commit(USER.AJAX_END)
-          reject(cleanErrors.INVALID_LOGIN)
-        }
-      })
-      .catch(err => {
-        commit(USER.AJAX_END)
-        reject(parseError(err))
-      })
+          reject(parseError(err))
+        })
     })
   },
 
@@ -68,29 +64,24 @@ export default {
    */
   createUser ({ dispatch, commit }, userData) {
     return new Promise((resolve, reject) => {
+      const request = apiHelper.axPost(apiUrls.user, userData)
       commit(USER.AJAX_BEGIN)
-      axios({
-        method: 'post',
-        headers: {
-          'Accept': 'application/json'
-        },
-        url: apiUrls.user,
-        data: userData
-      })
-      .then(res => {
-        // if successful, immediately submit a login request
-        dispatch('login', userData)
-          .then(() => {
-            resolve()
-          }, err => {
-            reject(err)
-          })
-      })
-      .catch(err => {
-        // if error, reject with error message
-        commit(USER.AJAX_END)
-        reject(parseError(err))
-      })
+
+      axios(request)
+        .then(res => {
+          // if successful, immediately submit a login request
+          dispatch('login', userData)
+            .then(() => {
+              resolve()
+            }, err => {
+              reject(err)
+            })
+        })
+        .catch(err => {
+          // if error, reject with error message
+          commit(USER.AJAX_END)
+          reject(parseError(err))
+        })
     })
   },
 
@@ -101,30 +92,20 @@ export default {
   loadUserDataFromToken ({ dispatch, commit }, authToken) {
     // GET request to User API endpoint
     function userReq () {
-      return axios({
-        method: 'get',
-        headers: {
-          'Authorization': authToken
-        },
-        url: apiUrls.user
-      })
+      const request = apiHelper.axGet(apiUrls.user, authToken)
+      return axios(request)
     }
 
     // GET request to Profile API endpoint
     function profileReq () {
-      return axios({
-        method: 'get',
-        headers: {
-          'Authorization': authToken
-        },
-        url: apiUrls.profiles
-      })
+      const request = apiHelper.axGet(apiUrls.profiles, authToken)
+      return axios(request)
     }
 
-    commit(USER.AJAX_BEGIN)
-    commit(PROFILE.AJAX_BEGIN)
-
     return new Promise((resolve, reject) => {
+      commit(USER.AJAX_BEGIN)
+      commit(PROFILE.AJAX_BEGIN)
+
       axios.all([userReq(), profileReq()])
         .then(res => {
           const userData = res[0].data.data[0]
