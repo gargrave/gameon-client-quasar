@@ -11,7 +11,7 @@ import LoginPage from './components/auth/containers/LoginPage'
 
 import GamesListPage from './components/games/GamesListPage'
 
-import PlatformsListPage from './components/platforms/PlatformsListPage'
+import PlatformsListPage from './components/platforms/containers/PlatformsListPage'
 
 function load (component) {
   return () => System.import(`components/${component}.vue`)
