@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
-import { parseError } from '../../globals/errors'
+import { cleanErrors, parseError } from '../../globals/errors'
 import { PLATFORMS } from '../mutation-types'
 
 export default {
@@ -13,7 +13,7 @@ export default {
       // make sure we have a valid auth token
       const authToken = getters.authToken
       if (!authToken) {
-        reject('Not authenticated')
+        reject(cleanErrors.INVALID_TOKEN)
       }
 
       commit(PLATFORMS.AJAX_BEGIN)
