@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
+import { apiHelper } from '../../globals/utils'
 import { cleanErrors, parseError } from '../../globals/errors'
 import { PLATFORMS } from '../mutation-types'
 
@@ -16,25 +17,20 @@ export default {
         reject(cleanErrors.INVALID_TOKEN)
       }
 
+      const request = apiHelper.buildRequest('get', apiUrls.platforms, authToken)
       commit(PLATFORMS.AJAX_BEGIN)
-      axios({
-        method: 'get',
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': authToken
-        },
-        url: apiUrls.platforms
-      })
-      .then(res => {
-        const platforms = res.data.data
-        commit(PLATFORMS.FETCH_SUCCESS, platforms)
-        commit(PLATFORMS.AJAX_END)
-        resolve()
-      })
-      .catch(err => {
-        commit(PLATFORMS.AJAX_END)
-        reject(parseError(err))
-      })
+
+      axios(request)
+        .then(res => {
+          const platforms = res.data.data
+          commit(PLATFORMS.FETCH_SUCCESS, platforms)
+          commit(PLATFORMS.AJAX_END)
+          resolve()
+        })
+        .catch(err => {
+          commit(PLATFORMS.AJAX_END)
+          reject(parseError(err))
+        })
     })
   },
 
@@ -49,10 +45,69 @@ export default {
   getCachedOrFetchPlatforms ({ state, dispatch, commit }) {
     return new Promise((resolve, reject) => {
       if (state.platforms.length) {
-        resolve(state.platforms)
+        resolve()
       } else {
-        return dispatch('fetchPlatforms')
+        dispatch('fetchPlatforms')
+          .then(() => {
+            resolve()
+          }, err => {
+            reject(err)
+          })
       }
+    })
+  },
+
+  /**
+   * Reqeusts an individual Platform with the specified ID from the API.
+   */
+  fetchPlatformById ({ getters, commit }, id) {
+    return new Promise((resolve, reject) => {
+      const authToken = getters.authToken
+      if (!authToken) {
+        reject(cleanErrors.INVALID_TOKEN)
+      }
+
+      const request = apiHelper.buildRequest(
+        'get', `${apiUrls.platforms}${id}`, authToken)
+      commit(PLATFORMS.AJAX_BEGIN)
+
+      axios(request)
+        .then(res => {
+          commit(PLATFORMS.AJAX_END)
+          resolve(res.data)
+        })
+        .catch(err => {
+          commit(PLATFORMS.AJAX_END)
+          reject(parseError(err))
+        })
+    })
+  },
+
+  /**
+   * Finds and returns an individual Platform based on the specified ID.
+   * Note that if the Platform cannot be found in the local list, a call to
+   * the API will be made requesting the single Platform instance.
+   */
+  findPlatform ({ state, dispatch, commit }, platformId) {
+    return new Promise((resolve, reject) => {
+      dispatch('getCachedOrFetchPlatforms')
+        .then(() => {
+          // check for a copy of this Platform in our local data
+          let platform = apiHelper.findRecordById(state.platforms, platformId)
+          if (platform) {
+            resolve(platform)
+          } else {
+            // if the Platform is not stored locally, make a call to the API
+            dispatch('fetchPlatformById', platformId)
+              .then(platformRes => {
+                resolve(platformRes)
+              }, err => {
+                reject(parseError(err))
+              })
+          }
+        }, err => {
+          reject(parseError(err))
+        })
     })
   },
 

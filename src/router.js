@@ -11,6 +11,7 @@ import LoginPage from './components/auth/containers/LoginPage'
 
 import GamesListPage from './components/games/GamesListPage'
 
+import PlatformDetailPage from './components/platforms/containers/PlatformDetailPage'
 import PlatformsListPage from './components/platforms/containers/PlatformsListPage'
 
 function load (component) {
@@ -66,6 +67,11 @@ export default new VueRouter({
       path: localUrls.platformsList,
       component: PlatformsListPage,
       name: routes.platforms.list
+    },
+    {
+      path: localUrls.platformDetail,
+      component: PlatformDetailPage,
+      name: routes.platforms.detail
     },
 
     { path: '/', component: load('Index') }, // Default

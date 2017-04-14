@@ -63,11 +63,9 @@ export default {
 
     /** Callback for clicking on a Platform card: routes to that Platform's details page. */
     onPlatformClick ({ id }, event) {
-      console.log(`TODO: Go to detail view for Platform: ${id}`)
-      // const id = value.id
-      // if (id) {
-      //   this.$router.push(`${localUrls.platformsList}/${id}`)
-      // }
+      if (Number.isInteger(id)) {
+        this.$router.push(`${localUrls.platformsList}/${id}`)
+      }
     },
 
     /** Gracefully handles any error messages from the API */

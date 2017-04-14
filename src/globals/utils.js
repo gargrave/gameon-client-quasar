@@ -11,5 +11,25 @@ export const apiHelper = {
       return record[0]
     }
     return null
+  },
+
+  /**
+   * Builds a request for an AJAX call via axios.
+   * Mostly just a shortcut to save writing everything out over and over
+   */
+  buildRequest (method, url, authToken = null) {
+    let req = {
+      method,
+      headers: {
+        'Accept': 'application/json'
+      },
+      url
+    }
+
+    if (authToken) {
+      req.headers['Authorization'] = authToken
+    }
+
+    return req
   }
 }
