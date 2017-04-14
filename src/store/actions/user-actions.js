@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
 import { parseError, cleanErrors } from '../../globals/errors'
-import { PROFILE, USER } from '../mutation-types'
+import { PLATFORMS, PROFILE, USER } from '../mutation-types'
 
 export default {
   /**
@@ -57,6 +57,7 @@ export default {
     return new Promise((resolve, reject) => {
       commit(USER.LOGOUT)
       commit(PROFILE.LOGOUT)
+      commit(PLATFORMS.CLEAR_ALL)
       resolve()
     })
   },
