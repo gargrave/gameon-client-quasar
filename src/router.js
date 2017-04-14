@@ -9,7 +9,7 @@ import AccountCreatePage from './components/auth/containers/AccountCreatePage'
 import AccountDetailPage from './components/auth/containers/AccountDetailPage'
 import LoginPage from './components/auth/containers/LoginPage'
 
-import GamesListPage from './components/games/GamesListPage'
+import GamesListPage from './components/games/containers/GamesListPage'
 
 import PlatformDetailPage from './components/platforms/containers/PlatformDetailPage'
 import PlatformsListPage from './components/platforms/containers/PlatformsListPage'
