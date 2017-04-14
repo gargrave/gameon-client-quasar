@@ -1,20 +1,29 @@
 <template>
   <div class="layout-view">
-    <div class="row justify-center small-gutter">
-      <div>
-        <h5>My Profile</h5>
+    <div class="row justify-center">
 
-        <p>First name: {{ profile.firstName }}</p>
-        <p>Last name: {{ profile.lastName }}</p>
+      <div class="card">
 
-        <button
-          class="primary outline"
-          @click="onLogout">
-            Logout
-        </button>
-      </div>
-    </div>
-  </div>
+        <div class="card-title bg-primary text-white">
+          My Profile
+        </div><!-- /card-title -->
+
+        <div class="card-content">
+          <p><strong>Name:</strong> {{ profile.firstName }} {{ profile.lastName }}</p>
+          <p><strong>Email:</strong> {{ userData.email }}</p>
+
+          <hr>
+          <button
+            class="primary outline"
+            @click="onLogout">
+              Logout
+          </button>
+        </div><!-- /card-content -->
+
+      </div><!-- /card -->
+
+    </div><!-- /row -->
+  </div><!-- /layout-view -->
 </template>
 
 <script>
@@ -33,6 +42,7 @@ export default {
 
   computed: {
     ...mapGetters([
+      'userData',
       'profile'
     ])
   },
