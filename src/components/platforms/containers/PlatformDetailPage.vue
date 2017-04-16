@@ -11,6 +11,13 @@
         <div class="card-content">
           <p><strong>Name:</strong> {{ originalPlatform.title }}</p>
           <p><strong>Added on:</strong> {{ originalPlatform.createdAt }}</p>
+
+          <hr>
+          <button
+            class="outline primary"
+            @click="onEditClick">
+            Edit
+          </button>
         </div><!-- /card-content -->
 
       </div><!-- /card -->
@@ -57,6 +64,10 @@ export default {
     setLocalObjectData (obj) {
       this.platform = Object.assign({}, obj)
       this.originalPlatform = Object.assign({}, obj)
+    },
+
+    onEditClick () {
+      console.log('onEditClick')
     },
 
     /** Attempts to submit the current user data to the API to login. */

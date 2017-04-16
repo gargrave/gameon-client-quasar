@@ -110,6 +110,33 @@ export default {
     })
   },
 
+  /**
+   * Sends a request to the server to create a new Platform instance.
+   */
+  createPlatform ({ getters, commit }, platform) {
+    return new Promise((resolve, reject) => {
+      const authToken = getters.authToken
+      if (!authToken) {
+        reject(cleanErrors.INVALID_TOKEN)
+      }
+
+      const request = apiHelper.axPost(apiUrls.platforms, platform, authToken)
+      commit(PLATFORMS.AJAX_BEGIN)
+
+      axios(request)
+        .then(res => {
+          const platform = res.data
+          commit(PLATFORMS.CREATE_SUCCESS, platform)
+          commit(PLATFORMS.AJAX_END)
+          resolve()
+        })
+        .catch(err => {
+          commit(PLATFORMS.AJAX_END)
+          reject(parseError(err))
+        })
+    })
+  },
+
   /** Simply clears the local list of Platforms; should be called when logging out */
   clearLocalPlatforms ({ commit }) {
     commit(PLATFORMS.CLEAR_ALL)

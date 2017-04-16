@@ -1,5 +1,14 @@
 <template>
   <div class="layout-view">
+    <div class="row justify-center">
+      <!-- 'add a platform' button -->
+      <button
+        class="list-view-add-button positive shadow-1"
+        @click="onAddClick">
+        Add a Platform
+      </button>
+    </div>
+
     <div class="row justify-center"
       v-for="platform in platforms">
 
@@ -57,7 +66,7 @@ export default {
     },
 
     /** Callback for 'add new platform' button click event */
-    onAddPlatformClick () {
+    onAddClick () {
       this.$router.push(localUrls.platformCreate)
     },
 
