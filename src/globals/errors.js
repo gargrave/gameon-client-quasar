@@ -21,6 +21,11 @@ const apiErrorNames = {
   invalidLogin: 'InvalidLogin'
 }
 
+  /*
+  API Error Objects
+  These pre-defined objects are built to match the 'name' and 'message' properties
+  of various errors returned from the API, so we can easily match them.
+  */
 const apiErrorObjects = {
   INVALID_TOKEN: {
     name: apiErrorNames.NotAuthenticated,
@@ -30,10 +35,16 @@ const apiErrorObjects = {
   INVALID_LOGIN: {
     name: apiErrorNames.NotAuthenticated,
     message: 'Invalid login.'
+  },
+
+  EXPIRED_TOKEN: {
+    name: apiErrorNames.NotAuthenticated,
+    message: 'jwt expired'
   }
 }
 
 const cleanMessages = {
+  EXPIRED_TOKEN: 'Auth token has expired. Please login again.',
   INVALID_TOKEN: 'Invalid token. Please login again.',
   INVALID_LOGIN: 'Incorrect username/password combination. Please try again.',
   UNKNOWN: 'An uknown error occurred.'
@@ -46,6 +57,7 @@ function isError (a, b) {
 
 export const cleanErrors = {
   EMPTY: { name: '', message: '' },
+  EXPIRED_TOKEN: { message: cleanMessages.EXPIRED_TOKEN },
   INVALID_TOKEN: { message: cleanMessages.INVALID_TOKEN },
   INVALID_LOGIN: { message: cleanMessages.INVALID_LOGIN }
 }
@@ -57,6 +69,12 @@ export function parseError (e) {
   if (isError(data, apiErrorObjects.INVALID_TOKEN)) {
     Toast.create.info(cleanMessages.INVALID_TOKEN)
     return cleanErrors.INVALID_TOKEN
+  }
+
+  // expired token error
+  if (isError(data, apiErrorObjects.EXPIRED_TOKEN)) {
+    Toast.create.info(cleanMessages.EXPIRED_TOKEN)
+    return cleanErrors.EXPIRED_TOKEN
   }
 
   // invalid login credentials
