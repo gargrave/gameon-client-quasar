@@ -18,8 +18,8 @@ export default {
   /**
    * Builds the necessary data for a request to the server to updated an existing instance.
    */
-  buildDataForUpdate (data) {
-    return Object.assign({ id: data.id }, this.buildDataForCreate(data))
+  buildDataForUpdate (original, updated) {
+    return Object.assign({ id: original.id }, this.buildDataForCreate(updated))
   },
 
   /**

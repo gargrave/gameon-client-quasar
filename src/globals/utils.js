@@ -34,8 +34,7 @@ export const apiHelper = {
   },
 
   /**
-   * Builds a GET request for an AJAX call via axios.
-   * Mostly just a shortcut to save writing everything out over and over
+   * Builds a POST request for an AJAX call via axios.
    */
   axPost (url, data, authToken = null) {
     let req = {
@@ -51,6 +50,16 @@ export const apiHelper = {
       req.headers['Authorization'] = authToken
     }
 
+    return req
+  },
+
+  /**
+   * Builds a PUT request for an AJAX call via axios.
+   * Note that this simply uses the POST method build, and then changes the method.
+   */
+  axPut (url, data, authToken = null) {
+    let req = this.axPost(url, data, authToken)
+    req.method = 'put'
     return req
   }
 }

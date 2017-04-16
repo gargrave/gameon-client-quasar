@@ -5,11 +5,21 @@
       <div class="card">
 
         <div class="card-title bg-primary text-white">
-          {{ originalPlatform.title }}
+          {{ platform.title }}
         </div><!-- /card-title -->
 
+        <app-platform-edit-view
+          v-if="editing"
+          :working="working"
+          :apiError="apiError"
+          :platform="platform"
+          @onFormSubmitted="onFormSubmitted">
+        </app-platform-edit-view>
+
         <app-platform-detail-view
-          :platform="originalPlatform">
+          v-else
+          :platform="platform"
+          @editClicked="onEditClick">
         </app-platform-detail-view>
 
       </div><!-- /card -->
@@ -22,13 +32,16 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import platformData from '../../../data/platform-data'
+import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 
 import PlatformDetailView from '../components/PlatformDetailView'
+import PlatformEditView from '../components/PlatformEditView'
 
 export default {
   components: {
-    appPlatformDetailView: PlatformDetailView
+    appPlatformDetailView: PlatformDetailView,
+    appPlatformEditView: PlatformEditView
   },
 
   data: () => ({
@@ -37,10 +50,10 @@ export default {
     working: false,
     // error messages returned from API (e.g. invalid data)
     apiError: '',
+    // whether we are in editing or viewing mode
+    editing: false,
     // the working copy of the instance
-    platform: platformData.buildPlatform(),
-    // a copy of the instance, used for checking for changes
-    originalPlatform: platformData.buildPlatform()
+    platform: platformData.buildPlatform()
   }),
 
   computed: {
@@ -54,27 +67,17 @@ export default {
   },
 
   methods: {
-     /**
-     * Sets the data for the local instance. Note that we are creating two
-     * objects, so that we can compare original vs. updated values, in order to
-     * disable form submission as appropriate.
-     */
-    setLocalObjectData (obj) {
-      this.platform = Object.assign({}, obj)
-      this.originalPlatform = Object.assign({}, obj)
-    },
-
     onEditClick () {
-      console.log('onEditClick')
+      this.editing = true
     },
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const updatedData = platformData.buildDataForUpdate(value)
+      const updatedData = platformData.buildDataForUpdate(this.platform, value)
 
-      if (platformData.areIndentical(updatedData, this.originalPlatform)) {
+      if (platformData.areIndentical(updatedData, this.platform)) {
         // if the instance has not changed, show a message and do not submit the update
-        // TODO: Show a Toast here
+        toasts.noChanges()
       } else {
         // otherwise, submit the update to the API
         this.working = true
@@ -84,9 +87,7 @@ export default {
           .then(() => {
             this.$router.push(localUrls.platformsList)
             this.working = false
-          }, (err) => {
-            this.handleApiError(err)
-          })
+          }, err => { this.onError(err) })
       }
     },
 
@@ -104,7 +105,8 @@ export default {
 
     ...mapActions([
       'checkForStoredLogin',
-      'findPlatform'
+      'findPlatform',
+      'updatePlatform'
     ])
   },
 
@@ -119,8 +121,9 @@ export default {
         } else {
           this.findPlatform(platformId)
             .then(platformRes => {
-              // if we get a valid instance, save two local copies
-              this.setLocalObjectData(platformRes)
+              this.platform = Object.assign({}, platformRes)
+              console.log('this.platform:')
+              console.log(this.platform)
               this.working = false
               this.initializing = false
             }, () => {
