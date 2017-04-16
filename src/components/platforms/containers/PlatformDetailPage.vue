@@ -123,8 +123,6 @@ export default {
           this.findPlatform(platformId)
             .then(platformRes => {
               this.platform = Object.assign({}, platformRes)
-              console.log('this.platform:')
-              console.log(this.platform)
               this.working = false
               this.initializing = false
             }, () => {

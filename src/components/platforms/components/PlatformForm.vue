@@ -21,7 +21,7 @@
     <button
       class="secondary outline pull-right"
       @click.prevent="onCancel">
-      Back
+      Cancel
     </button>
 
   </form>
