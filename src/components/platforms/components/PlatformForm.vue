@@ -6,6 +6,7 @@
       ref="title"
       name="title"
       label="Title"
+      maxlength="128"
       :initialValue="originalPlatform && originalPlatform.title || ''"
       :error="errors.title">
     </app-text-input>

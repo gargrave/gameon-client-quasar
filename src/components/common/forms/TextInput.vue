@@ -10,6 +10,7 @@
       :class="{ 'has-error': error }"
       :name="name"
       :placeholder="label"
+      :maxlength="maxlength"
       v-model.trim="model">
 
       <!-- password input -->
@@ -20,6 +21,7 @@
         :class="{ 'has-error': error }"
         :name="name"
         :placeholder="label"
+        :maxlength="maxlength"
         v-model.trim="model">
 
     <p class="form-error">{{ error }}</p>
@@ -57,6 +59,13 @@ export default {
     error: {
       type: String,
       required: true
+    },
+
+    // optional maxlength property
+    maxlength: {
+      type: String,
+      required: false,
+      default: '256'
     }
   },
 
