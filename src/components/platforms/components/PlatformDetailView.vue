@@ -5,9 +5,15 @@
 
     <hr>
     <button
-      class="outline primary"
+      class="primary"
       @click="$emit('editClicked')">
       Edit
+    </button>
+
+    <button
+      class="secondary pull-right"
+      @click="$emit('backClicked')">
+      Back
     </button>
   </div><!-- /card-content -->
 </template>

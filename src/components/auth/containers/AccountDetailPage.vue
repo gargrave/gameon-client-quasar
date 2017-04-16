@@ -14,7 +14,7 @@
 
           <hr>
           <button
-            class="primary outline"
+            class="secondary"
             @click="onLogout">
               Logout
           </button>

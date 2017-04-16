@@ -20,7 +20,8 @@
         <app-platform-detail-view
           v-else
           :platform="platform"
-          @editClicked="onEditClick">
+          @editClicked="onEditClick"
+          @backClicked="onBackClick">
         </app-platform-detail-view>
 
       </div><!-- /card -->
@@ -67,8 +68,14 @@ export default {
   },
 
   methods: {
+    /** Callback for clicking the 'edit' button; simply change to 'editing' state. */
     onEditClick () {
       this.editing = true
+    },
+
+    /** Callback for clicking the 'back' button; simply return to list page. */
+    onBackClick () {
+      this.$router.push(localUrls.platformsList)
     },
 
     /** Attempts to submit the current user data to the API to login. */

@@ -21,14 +21,14 @@
 
     <!-- 'submit' button -->
     <button
-      class="primary outline"
+      class="positive"
       type="submit">
       Submit
     </button>
 
     <!-- cancel/back button -->
     <button
-      class="secondary outline pull-right"
+      class="secondary pull-right"
       @click.prevent="onCancel">
       Sign Up
     </button>
