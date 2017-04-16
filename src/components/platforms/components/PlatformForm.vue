@@ -27,6 +27,10 @@
 </template>
 
 <script>
+import validator from 'validator'
+
+import { valErrs } from '../../../globals/errors'
+
 import TextInput from '../../common/forms/TextInput'
 
 export default {
@@ -39,23 +43,46 @@ export default {
     working: {
       type: Boolean,
       required: true
-    },
-
-    // collection of validation errors
-    errors: {
-      type: Object,
-      required: true
     }
   },
 
+  data: () => ({
+    // collection of validation errors
+    errors: {
+      title: ''
+    }
+  }),
+
   methods: {
+    /**
+     * Checks if the data submitted by the form is valid, and sets any necessary error messages.
+     * @return Whether the data is valid.
+     */
+    isValid (val) {
+      let valid = true
+
+      // validate title
+      this.errors.title = ''
+      if (!validator.isLength(val.title, { min: 1, max: 128 })) {
+        this.errors.title = valErrs.length(1, 128)
+        valid = false
+      }
+
+      return valid
+    },
+
+    /** Callback for submit button; if data validates, emit the 'submitted' event. */
     onSubmit () {
       const payload = {
         title: this.$refs.title.model
       }
-      this.$emit('submitted', payload)
+
+      if (this.isValid(payload)) {
+        this.$emit('submitted', payload)
+      }
     },
 
+    /** Callback for cancel button; simply emit the 'cancelled' event. */
     onCancel () {
       this.$emit('cancelled')
     }
