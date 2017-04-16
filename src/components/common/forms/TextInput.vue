@@ -48,6 +48,11 @@ export default {
       required: false
     },
 
+    initialValue: {
+      type: String,
+      required: false
+    },
+
     // error message (if any) pertaining to this field
     error: {
       type: String,
@@ -58,6 +63,13 @@ export default {
   data () {
     return {
       model: ''
+    }
+  },
+
+  created () {
+    // if an 'initialValue' is provided, set the model to that value
+    if (this.initialValue) {
+      this.model = this.initialValue
     }
   }
 }

@@ -6,6 +6,7 @@
       ref="title"
       name="title"
       label="Title"
+      :initialValue="originalPlatform.title || ''"
       :error="errors.title">
     </app-text-input>
 
@@ -43,6 +44,12 @@ export default {
     working: {
       type: Boolean,
       required: true
+    },
+    // the platform (if any) being edited
+    originalPlatform: {
+      type: Object,
+      required: false,
+      default: {}
     }
   },
 
