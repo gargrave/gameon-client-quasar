@@ -33,7 +33,6 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import platformData from '../../../data/platform-data'
-import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 
 import PlatformDetailView from '../components/PlatformDetailView'
@@ -76,20 +75,14 @@ export default {
     onFormSubmitted (value, event) {
       const updatedData = platformData.buildDataForUpdate(this.platform, value)
 
-      if (platformData.areIndentical(updatedData, this.platform)) {
-        // if the instance has not changed, show a message and do not submit the update
-        toasts.noChanges()
-      } else {
-        // otherwise, submit the update to the API
-        this.working = true
-        this.apiError = ''
+      this.working = true
+      this.apiError = ''
 
-        this.updatePlatform(updatedData)
-          .then(() => {
-            this.$router.push(localUrls.platformsList)
-            this.working = false
-          }, err => { this.onError(err) })
-      }
+      this.updatePlatform(updatedData)
+        .then(() => {
+          this.$router.push(localUrls.platformsList)
+          this.working = false
+        }, err => { this.onError(err) })
     },
 
     /** Callback for 'cancel' button on form; simply cancel the 'editing' state. */

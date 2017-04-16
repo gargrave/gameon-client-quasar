@@ -30,7 +30,9 @@
 <script>
 import validator from 'validator'
 
+import platformData from '../../../data/platform-data'
 import { valErrs } from '../../../globals/errors'
+import toasts from '../../../globals/toasts'
 
 import TextInput from '../../common/forms/TextInput'
 
@@ -72,6 +74,16 @@ export default {
       if (!validator.isLength(val.title, { min: 1, max: 128 })) {
         this.errors.title = valErrs.length(1, 128)
         valid = false
+      }
+
+      // if we have an 'original' value, compare it against the new value to ensure that something has changed
+      // if not, do not submit the update request
+      if (this.originalPlatform) {
+        const updatedPlatform = platformData.buildPlatform(val)
+        if (platformData.areIndentical(this.originalPlatform, updatedPlatform)) {
+          toasts.noChanges()
+          valid = false
+        }
       }
 
       return valid
