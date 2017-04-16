@@ -13,7 +13,8 @@
           :working="working"
           :apiError="apiError"
           :platform="platform"
-          @onFormSubmitted="onFormSubmitted">
+          @onFormSubmitted="onFormSubmitted"
+          @onFormCancelled="onFormCancelled">
         </app-platform-edit-view>
 
         <app-platform-detail-view
@@ -91,9 +92,9 @@ export default {
       }
     },
 
-    /** Callback for 'cancel' button on form; simply go back one step in history. */
+    /** Callback for 'cancel' button on form; simply cancel the 'editing' state. */
     onFormCancelled (value, event) {
-      this.$router.go(-1)
+      this.editing = false
     },
 
     /** Gracefully handles any error messages from the API */

@@ -37,20 +37,14 @@ export default {
   },
 
   methods: {
+    /** Callback for 'submit' button on form; simply emit the event upwards. */
     onFormSubmitted (value, event) {
       this.$emit('onFormSubmitted', value)
     },
 
-    /** Callback for 'cancel' button on form; simply go back one step in history. */
+    /** Callback for 'cancel' button on form; simply emit the event upwards. */
     onFormCancelled (value, event) {
-      this.$router.go(-1)
-    },
-
-     /** Gracefully handles any error messages from the API */
-    onError (err) {
-      this.apiError = err.message || ''
-      this.working = false
-      this.initializing = false
+      this.$emit('onFormCancelled', value)
     }
   }
 }
