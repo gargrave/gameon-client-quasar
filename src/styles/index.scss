@@ -3,6 +3,20 @@
 @import 'overrides';
 @import 'forms';
 
+.clamp-width {
+  max-width: $clampMaxWidth;
+}
+
 .cursor {
   cursor: pointer;
+}
+
+.list-view-add-button {
+  width: 100%;
+  max-width: $clampMaxWidth;
+  margin-bottom: $listViewMarginBtm;
+}
+
+.list-view-card {
+  margin-bottom: $listViewMarginBtm !important;
 }

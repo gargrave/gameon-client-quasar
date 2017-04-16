@@ -1,6 +1,6 @@
 <template>
   <div
-    class="card cursor"
+    class="card cursor list-view-card"
     @click="$emit('click', { id: platform.id })">
 
     <div class="card-content">
