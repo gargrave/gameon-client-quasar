@@ -8,17 +8,9 @@
           {{ originalPlatform.title }}
         </div><!-- /card-title -->
 
-        <div class="card-content">
-          <p><strong>Name:</strong> {{ originalPlatform.title }}</p>
-          <p><strong>Added on:</strong> {{ originalPlatform.createdAt }}</p>
-
-          <hr>
-          <button
-            class="outline primary"
-            @click="onEditClick">
-            Edit
-          </button>
-        </div><!-- /card-content -->
+        <app-platform-detail-view
+          :platform="originalPlatform">
+        </app-platform-detail-view>
 
       </div><!-- /card -->
 
@@ -32,7 +24,13 @@ import { mapActions, mapGetters } from 'vuex'
 import platformData from '../../../data/platform-data'
 import { localUrls } from '../../../globals/urls'
 
+import PlatformDetailView from '../components/PlatformDetailView'
+
 export default {
+  components: {
+    appPlatformDetailView: PlatformDetailView
+  },
+
   data: () => ({
     initializing: true,
     // whether any operations are currently running
