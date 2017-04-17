@@ -1,28 +1,38 @@
 <template>
   <div class="layout-view">
     <div class="row justify-center">
+      <!-- 'add a game' button -->
+      <button
+        class="list-view-add-button positive shadow-1"
+        @click="onAddClick">
+        Add a Game
+      </button>
+    </div>
 
-      <div class="card">
+    <div class="row justify-center"
+      v-for="game in games">
 
-        <div class="card-title bg-primary text-white">
-          My Games
-        </div><!-- /card-title -->
-
-        <div class="card-content">
-        </div><!-- /card-content -->
-
-      </div><!-- /card -->
+      <app-game-card
+        :game="game"
+        @click="onGameClick">
+      </app-game-card>
 
     </div><!-- /row -->
   </div><!-- /layout-view -->
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import { localUrls } from '../../../globals/urls'
 
+import GameCard from '../components/GameListCard'
+
 export default {
+  components: {
+    appGameCard: GameCard
+  },
+
   data: () => ({
     initializing: true,
     // whether any operations are currently running
@@ -33,15 +43,38 @@ export default {
 
   computed: {
     isWorking () {
-      return this.initializing || this.working || this.platformsAjaxPending
-    }
+      return this.initializing || this.working || this.gamesAjaxPending
+    },
+
+    ...mapGetters([
+      'gamesAjaxPending',
+      'games'
+    ])
   },
 
   methods: {
-    /** Queries the store to update the local list of Platforms */
+    /** Queries the store to update the local list of Games */
     rebuildGamesList () {
-      this.working = false
-      this.initializing = false
+      this.apiError = ''
+      this.working = true
+
+      this.getCachedOrFetchGames()
+        .then(() => {
+          this.working = false
+          this.initializing = false
+        }, err => { this.onError(err) })
+    },
+
+    /** Callback for 'add new game' button click event */
+    onAddClick () {
+      this.$router.push(localUrls.gameCreate)
+    },
+
+    /** Callback for clicking on a Game card: routes to that Game's details page. */
+    onGameClick ({ id }, event) {
+      if (Number.isInteger(id)) {
+        this.$router.push(`${localUrls.gamesList}/${id}`)
+      }
     },
 
     /** Gracefully handles any error messages from the API */
@@ -53,7 +86,7 @@ export default {
 
     ...mapActions([
       'checkForStoredLogin',
-      'getCachedOrFetchPlatforms'
+      'getCachedOrFetchGames'
     ])
   },
 
