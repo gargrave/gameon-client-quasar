@@ -128,7 +128,7 @@ export default {
           const platform = res.data
           commit(PLATFORMS.CREATE_SUCCESS, platform)
           commit(PLATFORMS.AJAX_END)
-          resolve()
+          resolve(platform)
         })
         .catch(err => {
           commit(PLATFORMS.AJAX_END)

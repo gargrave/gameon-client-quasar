@@ -55,8 +55,8 @@ export default {
       this.apiError = ''
 
       this.createPlatform(newPlatform)
-        .then(() => {
-          this.$router.push(localUrls.platformsList)
+        .then(res => {
+          this.$router.push(`${localUrls.platformsList}/${res.id}`)
           this.working = false
         }, err => { this.onError(err) })
     },
