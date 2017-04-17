@@ -7,5 +7,9 @@ import { Toast } from 'quasar'
 export default {
   noChanges () {
     Toast.create.warning('Nothing to save! No data has been changed.')
+  },
+
+  deleteConfirm (name = 'Entry') {
+    Toast.create.positive(`${name} deleted!`)
   }
 }
