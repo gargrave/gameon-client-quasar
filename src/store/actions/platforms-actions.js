@@ -165,6 +165,34 @@ export default {
     })
   },
 
+  /**
+   * Sends a request to the server to delete an existing Platform instance.
+   */
+  deletePlatform ({ getters, commit }, platformId) {
+    return new Promise((resolve, reject) => {
+      const authToken = getters.authToken
+      if (!authToken) {
+        reject('Not authenticated')
+      }
+
+      const request = apiHelper.axDelete(
+        `${apiUrls.platforms}${platformId}`, {}, authToken)
+      commit(PLATFORMS.AJAX_BEGIN)
+
+      axios(request)
+        .then(res => {
+          const platform = res.data
+          commit(PLATFORMS.DELETE_SUCCESS, platform)
+          commit(PLATFORMS.AJAX_END)
+          resolve()
+        })
+        .catch(err => {
+          commit(PLATFORMS.AJAX_END)
+          reject(parseError(err))
+        })
+    })
+  },
+
   /** Simply clears the local list of Platforms; should be called when logging out */
   clearLocalPlatforms ({ commit }) {
     commit(PLATFORMS.CLEAR_ALL)

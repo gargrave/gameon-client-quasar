@@ -27,6 +27,19 @@
       </div><!-- /card -->
 
     </div><!-- /row -->
+
+    <div class="row justify-center">
+      <div class="card">
+        <div class="card-content">
+          <button
+            class="negative full-width"
+            @click="onDeleteClick">
+            Delete
+          </button>
+        </div>
+      </div><!-- /card -->
+    </div><!-- /row -->
+
   </div><!-- /layout-view -->
 </template>
 
@@ -34,6 +47,8 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import platformData from '../../../data/platform-data'
+import dialogs from '../../../globals/dialogs'
+import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 
 import PlatformDetailView from '../components/PlatformDetailView'
@@ -78,6 +93,21 @@ export default {
       this.$router.push(localUrls.platformsList)
     },
 
+    /** Callback for clicking the 'delete' button; send a request to delete this object. */
+    onDeleteClick () {
+      dialogs.confirmDelete('Platform', () => {
+        this.working = true
+        this.apiError = ''
+
+        this.deletePlatform(this.platform.id)
+          .then(() => {
+            toasts.deleteConfirm('Platform')
+            this.$router.push(localUrls.platformsList)
+            this.working = false
+          }, err => { this.onError(err) })
+      })
+    },
+
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
       const updatedData = platformData.buildDataForUpdate(this.platform, value)
@@ -107,7 +137,8 @@ export default {
     ...mapActions([
       'checkForStoredLogin',
       'findPlatform',
-      'updatePlatform'
+      'updatePlatform',
+      'deletePlatform'
     ])
   },
 

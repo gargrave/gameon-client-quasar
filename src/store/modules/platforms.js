@@ -57,9 +57,9 @@ export default {
       ), platform]
     },
 
-    [PLATFORMS.DELETE_SUCCESS] (state, platformId) {
+    [PLATFORMS.DELETE_SUCCESS] (state, platform) {
       state.platforms = state.platforms.filter(
-        t => t.id !== platformId
+        t => t.id !== platform.id
       )
       state.platforms.sort()
     }
