@@ -26,6 +26,7 @@
 <script>
 import { mapActions } from 'vuex'
 
+import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 import platformData from '../../../data/platform-data'
 
@@ -56,6 +57,7 @@ export default {
 
       this.createPlatform(newPlatform)
         .then(res => {
+          toasts.createConfirm('Platform')
           this.$router.push(`${localUrls.platformsList}/${res.id}`)
           this.working = false
         }, err => { this.onError(err) })

@@ -9,6 +9,10 @@ export default {
     Toast.create.warning('Nothing to save! No data has been changed.')
   },
 
+  createConfirm (name = 'Entry') {
+    Toast.create.positive(`${name} created!`)
+  },
+
   deleteConfirm (name = 'Entry') {
     Toast.create.positive(`${name} deleted!`)
   }
