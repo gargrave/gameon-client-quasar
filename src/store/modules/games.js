@@ -1,9 +1,8 @@
-// import env from '../../globals/env'
+import env from '../../globals/env'
 import { GAMES } from '../mutation-types'
-import gamesSorter, { DEFAULT_SORT } from '../utils/game-sorter'
 
 import actions from '../actions/games-actions'
-// import mockActions from '../mock/games-actions-mock'
+import mockActions from '../mock/games/games-actions-mock'
 
 export default {
   state: {
@@ -16,8 +15,11 @@ export default {
       return state.gamesAjaxPending
     },
 
+    /** Returns the list of Games sorted alphabetically */
     games (state) {
-      return state.games
+      return state.games.sort((a, b) => {
+        return a.title > b.title ? 1 : -1
+      })
     }
   },
 
@@ -26,7 +28,7 @@ export default {
       state.games = []
     },
 
-    /* ============================================
+    /* =============================================
      = Games fetching
      ============================================= */
     [GAMES.AJAX_BEGIN] (state) {
@@ -37,33 +39,31 @@ export default {
       state.gamesAjaxPending = false
     },
 
-    [GAMES.FETCH_ALL] (state, games) {
-      state.games = gamesSorter.sort(games, DEFAULT_SORT, false)
+    [GAMES.FETCH_SUCCESS] (state, games) {
+      state.games = games
+      state.games.sort()
     },
 
     /* =============================================
      = Games creating/editing
      ============================================= */
-    [GAMES.CREATE] (state, game) {
-      state.games.push(game)
-      state.games = gamesSorter.sort(state.games, DEFAULT_SORT, false)
+    [GAMES.CREATE_SUCCESS] (state, payload) {
+      state.games.push(payload)
     },
 
-    [GAMES.UPDATE] (state, game) {
+    [GAMES.UPDATE_SUCCESS] (state, game) {
       state.games = [...state.games.filter(
         s => s.id !== game.id
       ), game]
-      state.games = gamesSorter.sort(state.games, DEFAULT_SORT, false)
     },
 
-    [GAMES.DELETE] (state, gameId) {
+    [GAMES.DELETE_SUCCESS] (state, game) {
       state.games = state.games.filter(
-        s => s.id !== gameId
+        t => t.id !== game.id
       )
-      state.games = gamesSorter.sort(state.games, DEFAULT_SORT, false)
+      state.games.sort()
     }
   },
 
-  actions: actions
-  // actions: env.useMockApi() ? mockActions : actions
+  actions: env.useMockApi() ? mockActions : actions
 }
