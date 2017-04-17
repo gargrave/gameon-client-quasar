@@ -9,6 +9,7 @@ import AccountCreatePage from './components/auth/containers/AccountCreatePage'
 import AccountDetailPage from './components/auth/containers/AccountDetailPage'
 import LoginPage from './components/auth/containers/LoginPage'
 
+import GameCreatePage from './components/games/containers/GameCreatePage'
 import GameDetailPage from './components/games/containers/GameDetailPage'
 import GamesListPage from './components/games/containers/GamesListPage'
 
@@ -56,6 +57,11 @@ export default new VueRouter({
     /* ============================================
      = Games routes
      ============================================= */
+    {
+      path: localUrls.gameCreate,
+      component: GameCreatePage,
+      name: routes.games.create
+    },
     {
       path: localUrls.gameDetail,
       component: GameDetailPage,

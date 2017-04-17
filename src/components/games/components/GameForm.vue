@@ -11,6 +11,33 @@
       :error="errors.title">
     </app-text-input>
 
+    <!-- platform selector -->
+    <div class="form-group">
+      <label for="platforms">Platform</label>
+      <q-select
+        class="form-control"
+        name="platform"
+        type="list"
+        v-model="selectedPlatform"
+        :options="platformsForSelect">
+      </q-select>
+    </div>
+
+    <!-- 'finished' checkbox -->
+    <div class="form-group">
+      <label>
+        <q-checkbox v-model="modelData.finished"></q-checkbox>
+        Finished
+      </label>
+    </div>
+
+    <div class="form-group">
+      <app-game-date-picker
+        :working="working"
+        :dates="datesForDatePicker">
+      </app-game-date-picker>
+    </div>
+
     <!-- 'submit' button -->
     <button
       class="positive"
@@ -36,10 +63,12 @@ import { valErrs } from '../../../globals/errors'
 import toasts from '../../../globals/toasts'
 
 import TextInput from '../../common/forms/TextInput'
+import GameDatePicker from './GameDatePicker'
 
 export default {
   components: {
-    appTextInput: TextInput
+    appTextInput: TextInput,
+    appGameDatePicker: GameDatePicker
   },
 
   props: {
@@ -52,15 +81,38 @@ export default {
     originalGame: {
       type: Object,
       required: false
+    },
+    // list of available platforms
+    platforms: {
+      type: Array,
+      required: true
     }
   },
 
   data: () => ({
+    modelData: gameData.buildGame(),
+    selectedPlatform: '',
     // collection of validation errors
     errors: {
       title: ''
     }
   }),
+
+  computed: {
+    platformsForSelect () {
+      return this.platforms.map((p) => {
+        return {
+          key: p.id,
+          label: p.title,
+          value: p.title
+        }
+      })
+    },
+
+    datesForDatePicker () {
+      return this.originalGame ? this.originalGame.dates : []
+    }
+  },
 
   methods: {
     /**
