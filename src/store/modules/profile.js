@@ -7,9 +7,9 @@ import mockActions from '../mock/profile/profile-actions-mock'
 
 function buildProfile (data = {}) {
   return {
-    id: data.id || '',
-    firstName: data.firstName || '',
-    lastName: data.lastName || ''
+    id: data.pk || '',
+    firstName: data.first_name || '',
+    lastName: data.last_name || ''
   }
 }
 

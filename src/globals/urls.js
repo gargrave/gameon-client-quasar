@@ -1,6 +1,6 @@
 import env from './env'
 
-const DEV_API_ROOT_URL = 'http://localhost:3030'
+const DEV_API_ROOT_URL = 'http://localhost:8000'
 const STAGING_API_ROOT_URL = ''
 const PROD_API_ROOT_URL = ''
 
@@ -41,10 +41,10 @@ export let routes = {
 
 // URLs for AJAX calls to the API
 export let apiUrls = {
-  login: `${apiRoot}/auth/local/`,
-  logout: `${apiRoot}/auth/logout/`,
-  user: `${apiRoot}/users/`,
-  profiles: `${restApiRoot}/profiles/`,
+  login: `${apiRoot}/rest-auth/login/`,
+  logout: `${apiRoot}/rest-auth/logout/`,
+  user: `${apiRoot}/rest-auth/user/`,
+  profiles: `${apiRoot}/rest-auth/user/profile/`,
   games: `${restApiRoot}/games/`,
   platforms: `${restApiRoot}/platforms/`
 }

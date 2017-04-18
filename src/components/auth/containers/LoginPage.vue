@@ -44,7 +44,7 @@ export default {
 
       // form validation errors (if any)
       validationErrors: {
-        email: '',
+        username: '',
         password: ''
       },
 
@@ -60,7 +60,7 @@ export default {
     onFormSubmitted (value, event) {
       if (this.isValid(value)) {
         const userPayload = {
-          email: value.email,
+          username: value.username,
           password: value.password
         }
 
@@ -80,7 +80,7 @@ export default {
     },
 
     onError (err) {
-      this.validationErrors = { email: '', password: '' }
+      this.validationErrors = { username: '', password: '' }
       this.apiError = err.message || ''
       this.working = false
     },
@@ -92,12 +92,12 @@ export default {
     isValid (val) {
       let valid = true
 
-      // validate email
-      this.validationErrors.email = ''
-      if (!validator.isEmail(val.email)) {
-        this.validationErrors.email = valErrs.email
-        valid = false
-      }
+      // validate username
+      this.validationErrors.username = ''
+      // if (!validator.isEmail(val.email)) {
+      //   this.validationErrors.email = valErrs.email
+      //   valid = false
+      // }
 
       // validate password
       this.validationErrors.password = ''

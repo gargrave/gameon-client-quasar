@@ -27,7 +27,7 @@ export const apiHelper = {
     }
 
     if (authToken) {
-      req.headers['Authorization'] = authToken
+      req.headers['Authorization'] = `Token ${authToken}`
     }
 
     return req
@@ -47,7 +47,7 @@ export const apiHelper = {
     }
 
     if (authToken) {
-      req.headers['Authorization'] = authToken
+      req.headers['Authorization'] = `Token ${authToken}`
     }
 
     return req

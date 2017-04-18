@@ -12,7 +12,7 @@ export default {
    * Note that, upon successful login, an extra API call is made to fetch
    * the full user data.
    *
-   * @param credentials - An object with 'email' and 'password' props
+   * @param credentials - An object with 'username' and 'password' props
    * @returns {Promise}
    */
   login ({ dispatch, commit }, credentials) {
@@ -22,14 +22,10 @@ export default {
 
       axios(request)
         .then(res => {
-          // if no error, login locally with returned user data
-          const userData = res.data.data
-          const profile = res.data.data.profile
-          const authToken = res.data.token
+          const authToken = res.data.key
 
-          if (userData.id && profile.id && authToken) {
-            commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
-            commit(PROFILE.FETCH_SUCCESS, profile)
+          if (authToken) {
+            commit(USER.LOGIN, authToken)
             commit(USER.AJAX_END)
             resolve()
           } else {
@@ -42,6 +38,10 @@ export default {
           reject(parseError(err))
         })
     })
+  },
+
+  fetchUser ({ commit }) {
+    // alsdkjf
   },
 
   /**
@@ -108,11 +108,12 @@ export default {
 
       axios.all([userReq(), profileReq()])
         .then(res => {
-          const userData = res[0].data.data[0]
-          const profile = res[1].data.data[0]
+          const userData = res[0].data
+          const profile = res[1].data
 
-          if (userData.id && profile.id) {
-            commit(USER.LOGIN, Object.assign({}, userData, { authToken }))
+          if (userData.pk && profile.pk) {
+            commit(USER.LOGIN, authToken)
+            commit(USER.FETCH_SUCCESS, userData)
             commit(PROFILE.FETCH_SUCCESS, profile)
             commit(USER.AJAX_END)
             commit(PROFILE.AJAX_END)

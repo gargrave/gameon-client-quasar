@@ -8,8 +8,10 @@ import mockActions from '../mock/user/user-actions-mock'
 function getEmptyUser () {
   return {
     id: '',
+    username: '',
     email: '',
-    dateJoined: ''
+    dateJoined: '',
+    lastLogin: ''
   }
 }
 
@@ -61,19 +63,24 @@ export default {
     },
 
     /** login authenticated user; save provided user details in the store */
-    [USER.LOGIN] (state, user) {
-      const userData = {
-        id: user.id,
-        email: user.email,
-        dateJoined: user.createdAt || ''
-      }
-      state.user = userData
-      state.authToken = user.authToken
+    [USER.LOGIN] (state, authToken) {
+      state.authToken = authToken
 
       // store token in localStorage (if not testing)
       if (!env.isTesting()) {
-        localStorage.setItem('authToken', user.authToken)
+        localStorage.setItem('authToken', authToken)
       }
+    },
+
+    [USER.FETCH_SUCCESS] (state, user) {
+      const userData = {
+        id: user.pk,
+        username: user.username,
+        email: user.email,
+        dateJoined: user.date_joined,
+        lastLogin: user.last_login
+      }
+      state.user = userData
     },
 
     /** logout current user; simply clear existing user data */
