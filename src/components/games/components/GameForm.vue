@@ -15,12 +15,15 @@
     <div class="form-group">
       <label for="platforms">Platform</label>
       <q-select
+        placeholder="Select Platform"
         class="form-control"
+        :class="{ 'has-error': errors.platform }"
         name="platform"
         type="list"
         v-model="selectedPlatform"
         :options="platformsForSelect">
       </q-select>
+      <p class="form-error">{{ errors.platform }}</p>
     </div>
 
     <!-- 'finished' checkbox -->
@@ -33,6 +36,7 @@
 
     <div class="form-group">
       <app-game-date-picker
+        ref="dateEditor"
         :working="working"
         :dates="datesForDatePicker">
       </app-game-date-picker>
@@ -94,7 +98,8 @@ export default {
     selectedPlatform: '',
     // collection of validation errors
     errors: {
-      title: ''
+      title: '',
+      platform: ''
     }
   }),
 
@@ -121,11 +126,20 @@ export default {
      */
     isValid (val) {
       let valid = true
+      this.errors = {
+        title: '',
+        platform: ''
+      }
 
       // validate title
-      this.errors.title = ''
       if (!validator.isLength(val.title, { min: 1, max: 128 })) {
         this.errors.title = valErrs.length(1, 128)
+        valid = false
+      }
+
+      // validate platform
+      if (!val.platform) {
+        this.errors.platform = valErrs.required
         valid = false
       }
 
@@ -142,11 +156,31 @@ export default {
       return valid
     },
 
+    /** Builds the data structure required for submitting an update to the current Game */
+    getDataForSubmit () {
+      let submitData = Object.assign({}, this.modelData)
+      submitData.title = this.$refs.title.model
+
+      // set the platform; we need to parse this from a string to the full Platform object
+      submitData.platform = this.platforms.find((p) =>
+        p.title === this.selectedPlatform
+      )
+
+      // set the dates to the computed dates list (i.e. accounting for added/removed)
+      submitData.dates = this.$refs['dateEditor'].getDatesList()
+
+      // if any dates have been marked to be removed, add that list
+      const datesRemoved = this.$refs['dateEditor'].getRemovedDatesList()
+      if (datesRemoved.length) {
+        submitData.datesRemoved = datesRemoved
+      }
+
+      return submitData
+    },
+
     /** Callback for submit button; if data validates, emit the 'submitted' event. */
     onSubmit () {
-      const payload = {
-        title: this.$refs.title.model
-      }
+      const payload = this.getDataForSubmit()
 
       if (this.isValid(payload)) {
         this.$emit('submitted', payload)

@@ -27,7 +27,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-// import toasts from '../../../globals/toasts'
+import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 import gameData from '../../../data/game-data'
 
@@ -57,19 +57,17 @@ export default {
   methods: {
     /** Callback for 'submit' event from the form; attempt to create a new instance on the server. */
     onFormSubmitted (value) {
-      console.log('value:')
-      console.log(value)
-      // const newGame = gameData.buildDataForCreate(value)
+      const newGame = gameData.buildDataForCreate(value)
 
-      // this.working = true
-      // this.apiError = ''
+      this.working = true
+      this.apiError = ''
 
-      // this.createGame(newGame)
-      //   .then(res => {
-      //     toasts.createConfirm('Game')
-      //     this.$router.push(`${localUrls.gamesList}/${res.id}`)
-      //     this.working = false
-      //   }, err => { this.onError(err) })
+      this.createGame(newGame)
+        .then(res => {
+          toasts.createConfirm('Game')
+          this.$router.push(`${localUrls.gamesList}/${res.id}`)
+          this.working = false
+        }, err => { this.onError(err) })
     },
 
     /** Callback for 'cancelled' event from the form; simply go back to list page. */

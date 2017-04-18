@@ -2,6 +2,17 @@ import { isEqual } from 'lodash'
 
 import platformData from './platform-data'
 
+function parsePlatformData (data) {
+  if (data.platform) {
+    if (Number.isInteger(data.platform)) {
+      return data.platform
+    } else if (data.platform.id) {
+      return data.platform.id
+    }
+    return platformData.getNewRecord()
+  }
+}
+
 export default {
   buildGame (data = {}) {
     return {
@@ -18,15 +29,22 @@ export default {
    */
   buildDataForCreate (data) {
     return {
-      title: data.title ? data.title.trim() : ''
+      title: data.title ? data.title.trim() : '',
+      platformId: parsePlatformData(data),
+      dates: data.dates || [],
+      tags: data.tags || [],
+      finished: data.finished || false
     }
   },
 
   /**
    * Builds the necessary data for a request to the server to updated an existing instance.
    */
-  buildDataForUpdate (original, updated) {
-    return Object.assign({ id: original.id }, this.buildDataForCreate(updated))
+  buildDataForUpdate (data) {
+    return Object.assign({
+      id: data.id,
+      datesRemoved: data.datesRemoved || []
+    }, this.buildDataForCreate(data))
   },
 
   /**
