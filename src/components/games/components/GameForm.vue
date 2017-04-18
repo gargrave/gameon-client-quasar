@@ -191,6 +191,13 @@ export default {
     onCancel () {
       this.$emit('cancelled')
     }
+  },
+
+  created () {
+    if (this.originalGame) {
+      this.modelData = Object.assign({}, this.originalGame)
+      this.selectedPlatform = this.modelData.platform.title
+    }
   }
 }
 </script>

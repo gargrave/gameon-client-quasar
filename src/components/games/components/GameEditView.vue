@@ -4,6 +4,7 @@
     <app-game-form
       :working="working"
       :originalGame="game"
+      :platforms="platforms"
       @submitted="onFormSubmitted"
       @cancelled="onFormCancelled">
     </app-game-form>
@@ -32,6 +33,11 @@ export default {
     // the Game object being edited
     game: {
       type: Object,
+      required: true
+    },
+    // list of available platforms
+    platforms: {
+      type: Array,
       required: true
     }
   },

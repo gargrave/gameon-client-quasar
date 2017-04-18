@@ -59,7 +59,7 @@ export default {
     }
 
     // compare platforms
-    if (a.platformId !== b.platformId) {
+    if (a.platform.id !== b.platform.id) {
       matching = false
     }
 

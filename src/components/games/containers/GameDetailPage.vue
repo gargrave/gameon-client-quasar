@@ -13,6 +13,7 @@
           :working="working"
           :apiError="apiError"
           :game="game"
+          :platforms="platforms"
           @onFormSubmitted="onFormSubmitted"
           @onFormCancelled="onFormCancelled">
         </app-game-edit-view>
@@ -78,7 +79,8 @@ export default {
     },
 
     ...mapGetters([
-      'gamesAjaxPending'
+      'gamesAjaxPending',
+      'platforms'
     ])
   },
 
@@ -110,7 +112,7 @@ export default {
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const updatedData = gameData.buildDataForUpdate(this.game, value)
+      const updatedData = gameData.buildDataForUpdate(value)
 
       this.working = true
       this.apiError = ''
