@@ -119,6 +119,7 @@ export default {
 
       this.updateGame(updatedData)
         .then(() => {
+          toasts.updateConfirm('Game')
           this.$router.push(localUrls.gamesList)
           this.working = false
         }, err => { this.onError(err) })

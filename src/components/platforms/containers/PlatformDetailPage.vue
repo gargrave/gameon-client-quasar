@@ -117,6 +117,7 @@ export default {
 
       this.updatePlatform(updatedData)
         .then(() => {
+          toasts.updateConfirm('Platform')
           this.$router.push(localUrls.platformsList)
           this.working = false
         }, err => { this.onError(err) })

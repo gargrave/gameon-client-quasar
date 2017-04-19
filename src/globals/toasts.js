@@ -13,6 +13,10 @@ export default {
     Toast.create.positive(`${name} created!`)
   },
 
+  updateConfirm (name = 'Entry') {
+    Toast.create.positive(`${name} updated!`)
+  },
+
   deleteConfirm (name = 'Entry') {
     Toast.create.positive(`${name} deleted!`)
   }
