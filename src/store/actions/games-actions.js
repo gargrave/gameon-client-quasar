@@ -9,7 +9,7 @@ export default {
   /**
    * Fetches the full list of user's Games from the API.
    */
-  fetchGames ({ getters, commit }) {
+  fetchGames ({ dispatch, getters, commit }) {
     return new Promise((resolve, reject) => {
       // make sure we have a valid auth token
       const authToken = getters.authToken
@@ -17,19 +17,22 @@ export default {
         reject(cleanErrors.INVALID_TOKEN)
       }
 
-      const request = apiHelper.axGet(apiUrls.games, authToken)
-      commit(GAMES.AJAX_BEGIN)
+      dispatch('getCachedOrFetchPlatforms')
+        .then(() => {
+          const request = apiHelper.axGet(apiUrls.games, authToken)
+          commit(GAMES.AJAX_BEGIN)
 
-      axios(request)
-        .then(res => {
-          const games = res.data.results
-          commit(GAMES.FETCH_SUCCESS, games)
-          commit(GAMES.AJAX_END)
-          resolve()
-        })
-        .catch(err => {
-          commit(GAMES.AJAX_END)
-          reject(parseError(err))
+          axios(request)
+            .then(res => {
+              const games = res.data.results
+              commit(GAMES.FETCH_SUCCESS, games)
+              commit(GAMES.AJAX_END)
+              resolve()
+            })
+            .catch(err => {
+              commit(GAMES.AJAX_END)
+              reject(parseError(err))
+            })
         })
     })
   },
