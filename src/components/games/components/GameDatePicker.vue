@@ -3,33 +3,42 @@
     <hr>
 
     <!-- text showing status of dates existing, added, and removed -->
-    <p>
-      <span class="existing-text">{{ existingDatesText }}</span>,
-      <span class="added-text">{{ addedDatesText }}</span>,
+    <p class="date-editor-label">
+      <strong>Dates:</strong>&nbsp;
+      <span class="existing-text">{{ existingDatesText }}</span>&nbsp;|&nbsp;
+      <span class="added-text">{{ addedDatesText }}</span>&nbsp;|&nbsp;
       <span class="removed-text">{{ removedDatesText }}</span>
     </p>
 
-    <!-- datepicker for adding a single date -->
-    <label for="datepicker">Add a date</label>
-    <q-datetime
-      class="form-control"
-      name="datepicker"
-      placeholder="Click/tap to choose a date"
-      v-model="datePickerModel"
-      type="date"
-      @input="onDateSelected">
-    </q-datetime>
+    <button
+      type="button"
+      class="tertiary outline small date-editor-button"
+      @click="showingDates = !showingDates">
+      {{ toggleButtonText }}
+    </button>
 
-    <!-- list of all dates existing, added, and removed -->
-    <div class="list highlight item-delimiter gamedate-list">
-      <div
-        v-for="date in datesForTable"
-        class="item"
-        :class="dateDisplayClass(date)"
-        @click.prevent="onDateDeleteClick(date)">
-        <div class="item-content">{{ date }}</div>
-      </div>
-    </div>
+    <!-- datepicker for adding a single date -->
+    <div v-show="showingDates">
+      <q-datetime
+        class="form-control"
+        name="datepicker"
+        placeholder="Click/tap to add a date"
+        v-model="datePickerModel"
+        type="date"
+        @input="onDateSelected">
+      </q-datetime>
+
+      <!-- list of all dates existing, added, and removed -->
+      <div class="list highlight item-delimiter gamedate-list">
+        <div
+          v-for="date in datesForTable"
+          class="item"
+          :class="dateDisplayClass(date)"
+          @click.prevent="onDateDeleteClick(date)">
+          <div class="item-content">{{ date }}</div>
+        </div><!-- /list-item -->
+      </div><!-- /list -->
+    </div><!-- /dates list wrapper -->
 
   </div>
 </template>
@@ -73,7 +82,7 @@ export default {
      */
     addedDatesText () {
       const count = this.datesAdded.length
-      return `${count} to add`
+      return `Adding ${count}`
     },
 
     /**
@@ -81,7 +90,14 @@ export default {
      */
     removedDatesText () {
       const count = this.datesRemoved.length
-      return `${count} to remove`
+      return `Removing ${count}`
+    },
+
+    /**
+     * Returns the text to show on the 'show/hide dates' buttons
+     */
+    toggleButtonText () {
+      return this.showingDates ? 'Hide Dates' : 'Show Dates'
     },
 
     /**
@@ -117,13 +133,6 @@ export default {
      */
     isRemoved (date) {
       return this.datesRemoved.includes(date)
-    },
-
-    /**
-     * Handler for 'show dates' button; simply toggle visibility
-     */
-    onDatesListToggle () {
-      this.showingDates = !this.showingDates
     },
 
     /**
@@ -200,6 +209,11 @@ export default {
 </script>
 
 <style scoped>
+/* adjust styles for 'xxx existing, xxx to add...' label */
+.date-editor-label {
+  font-size: .9rem;
+}
+
 .added-text {
   color: #085008;
 }
@@ -208,25 +222,32 @@ export default {
   color: #2020ca;
 }
 
+/* spacing for buttons in the date editor */
+.date-editor-button {
+  margin: 0 0 10px 0;
+}
+
 .removed-text {
   color: #af0000;
 }
 
+/* adjust spacing/sizing for date rows */
 .gamedate-list > .item {
   height: 40px;
 }
 
+/* adjust spacing/sizing for date rows */
 .gamedate-list > .item > .item-content {
   padding: 13px 0;
   font-size: .9rem;
 }
 
-/* table rows for 'added' dates */
+/* rows for 'added' dates */
 .gamedate-list .added-row {
   background: #a6e897;
 }
 
-/* table rows for 'removed' dates */
+/* rows for 'removed' dates */
 .gamedate-list .removed-row {
   background: #ffbcbc;
   text-decoration: line-through;
