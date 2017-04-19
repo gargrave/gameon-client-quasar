@@ -52,6 +52,7 @@
     <!-- cancel/back button -->
     <button
       class="secondary pull-right"
+      type="button"
       @click.prevent="onCancel">
       Cancel
     </button>

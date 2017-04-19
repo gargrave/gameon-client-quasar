@@ -32,6 +32,7 @@
           <td class="text-left date-row">{{ date }}</td>
           <td class="text-right">
             <button
+              type="button"
               class="primary small game-date-editor-button"
               @click.prevent="onDateDeleteClick(date)">
               Delete
