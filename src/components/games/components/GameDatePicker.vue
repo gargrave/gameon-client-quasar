@@ -1,47 +1,35 @@
 <template>
   <div>
     <hr>
+
+    <!-- text showing status of dates existing, added, and removed -->
     <p>
       <span class="existing-text">{{ existingDatesText }}</span>,
       <span class="added-text">{{ addedDatesText }}</span>,
       <span class="removed-text">{{ removedDatesText }}</span>
     </p>
 
+    <!-- datepicker for adding a single date -->
     <label for="datepicker">Add a date</label>
     <q-datetime
       class="form-control"
       name="datepicker"
+      placeholder="Click/tap to choose a date"
       v-model="datePickerModel"
       type="date"
       @input="onDateSelected">
     </q-datetime>
 
-    <table
-      class="q-table horizontal-delimiter form-control gamedate-table"
-      v-if="datesForTable.length">
-      <thead>
-        <tr>
-          <th class="text-left">Date</th>
-          <th class="text-right"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="date in datesForTable"
-          :class="tableRowClassName(date)">
-          <td class="text-left date-row">{{ date }}</td>
-          <td class="text-right">
-            <button
-              type="button"
-              class="dark outline circular small game-date-editor-button"
-              @click.prevent="onDateDeleteClick(date)">
-              <i v-if="isRemoved(date)">refresh</i>
-              <i v-else>delete_forever</i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- list of all dates existing, added, and removed -->
+    <div class="list highlight item-delimiter gamedate-list">
+      <div
+        v-for="date in datesForTable"
+        class="item"
+        :class="dateDisplayClass(date)"
+        @click.prevent="onDateDeleteClick(date)">
+        <div class="item-content">{{ date }}</div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -104,7 +92,7 @@ export default {
         dates.push(d)
       })
 
-      dates.sort((a, b) => a.date < b.date ? 1 : -1)
+      dates.sort((a, b) => a < b ? 1 : -1)
       return dates
     }
   },
@@ -114,7 +102,7 @@ export default {
      * Computes classes for table rows for both dates that have been added
      * but not yet saved, and dates that have been removed but not yet saved.
      */
-    tableRowClassName (date) {
+    dateDisplayClass (date) {
       if (this.datesAdded.includes(date)) {
         return 'added-row'
       } else if (this.datesRemoved.includes(date)) {
@@ -219,23 +207,23 @@ export default {
   color: #af0000;
 }
 
-.gamedate-table .date-row {
-  width: 100%
+.gamedate-list > .item {
+  height: 40px;
+}
+
+.gamedate-list > .item > .item-content {
+  padding: 13px 0;
+  font-size: .9rem;
 }
 
 /* table rows for 'added' dates */
-.gamedate-table .added-row {
+.gamedate-list .added-row {
   background: #a6e897;
 }
 
 /* table rows for 'removed' dates */
-.gamedate-table .removed-row {
+.gamedate-list .removed-row {
   background: #ffbcbc;
   text-decoration: line-through;
-}
-
-/* buttons inside the dates table */
-.gamedate-table .game-date-editor-button {
-  float: right;
 }
 </style>
