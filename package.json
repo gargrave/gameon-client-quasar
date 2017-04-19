@@ -8,6 +8,9 @@
     "clean": "node build/script.clean.js",
     "dev": "node build/script.dev.js",
     "build": "node build/script.build.js",
+    "bd_dev": "npm run build && npm run deploy_dev",
+    "deploy_dev": "netlify deploy -e staging",
+    "deploy_prod": "netlify deploy -e prod",
     "lint": "eslint --ext .js,.vue src",
     "test": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js"
   },
