@@ -53,7 +53,7 @@ export default {
 
     [PLATFORMS.UPDATE_SUCCESS] (state, platform) {
       state.platforms = [...state.platforms.filter(
-        s => s.id !== platform.id
+        s => Number(s.id) !== Number(platform.id)
       ), platform]
     },
 

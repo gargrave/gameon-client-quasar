@@ -53,13 +53,13 @@ export default {
 
     [GAMES.UPDATE_SUCCESS] (state, game) {
       state.games = [...state.games.filter(
-        s => s.id !== game.id
+        s => Number(s.id) !== Number(game.id)
       ), game]
     },
 
-    [GAMES.DELETE_SUCCESS] (state, game) {
+    [GAMES.DELETE_SUCCESS] (state, gameId) {
       state.games = state.games.filter(
-        t => t.id !== game.id
+        g => Number(g.id) !== Number(gameId)
       )
       state.games.sort()
     }

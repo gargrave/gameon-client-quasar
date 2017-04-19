@@ -22,7 +22,7 @@ export default {
 
       axios(request)
         .then(res => {
-          const games = res.data.data
+          const games = res.data.results
           commit(GAMES.FETCH_SUCCESS, games)
           commit(GAMES.AJAX_END)
           resolve()
@@ -180,9 +180,8 @@ export default {
       commit(GAMES.AJAX_BEGIN)
 
       axios(request)
-        .then(res => {
-          const game = res.data
-          commit(GAMES.DELETE_SUCCESS, game)
+        .then(() => {
+          commit(GAMES.DELETE_SUCCESS, gameId)
           commit(GAMES.AJAX_END)
           resolve()
         })
