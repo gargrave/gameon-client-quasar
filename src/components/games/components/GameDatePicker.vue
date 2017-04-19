@@ -60,19 +60,25 @@ export default {
   }),
 
   computed: {
-    /** Returns the text to display for 'xxx existing' dates */
+    /**
+     * Returns the text to display for 'xxx existing' dates
+     */
     existingDatesText () {
       const count = this.dates.length
       return `${count} existing`
     },
 
-    /** Returns the text to display for 'xxx to add' dates */
+    /**
+     * Returns the text to display for 'xxx to add' dates
+     */
     addedDatesText () {
       const count = this.datesAdded.length
       return `${count} to add`
     },
 
-    /** Returns the text to display for 'xxx to remove' dates */
+    /**
+     * Returns the text to display for 'xxx to remove' dates
+     */
     removedDatesText () {
       const count = this.datesRemoved.length
       return `${count} to remove`
@@ -84,13 +90,8 @@ export default {
     datesForTable () {
       let dates = []
 
-      this.dates.map((d) => {
-        dates.push(d)
-      })
-
-      this.datesAdded.map((d) => {
-        dates.push(d)
-      })
+      this.dates.map((d) => { dates.push(d) })
+      this.datesAdded.map((d) => { dates.push(d) })
 
       dates.sort((a, b) => a < b ? 1 : -1)
       return dates
@@ -111,12 +112,16 @@ export default {
       return ''
     },
 
-    /** Returns whether the provided date row is currently in the 'removed' list */
+    /**
+     * Returns whether the provided date row is currently in the 'removed' list
+     */
     isRemoved (date) {
       return this.datesRemoved.includes(date)
     },
 
-    /** Handler for 'show dates' button; simply toggle visibility */
+    /**
+     * Handler for 'show dates' button; simply toggle visibility
+     */
     onDatesListToggle () {
       this.showingDates = !this.showingDates
     },
