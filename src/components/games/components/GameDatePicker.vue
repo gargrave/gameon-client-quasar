@@ -33,9 +33,10 @@
           <td class="text-right">
             <button
               type="button"
-              class="primary small game-date-editor-button"
+              class="dark outline circular small game-date-editor-button"
               @click.prevent="onDateDeleteClick(date)">
-              Delete
+              <i v-if="isRemoved(date)">refresh</i>
+              <i v-else>delete_forever</i>
             </button>
           </td>
         </tr>
@@ -123,8 +124,8 @@ export default {
     },
 
     /** Returns whether the provided date row is currently in the 'removed' list */
-    isRemoved (row) {
-      return this.datesRemoved.includes(row.date)
+    isRemoved (date) {
+      return this.datesRemoved.includes(date)
     },
 
     /** Handler for 'show dates' button; simply toggle visibility */
