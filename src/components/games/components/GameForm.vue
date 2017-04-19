@@ -134,7 +134,7 @@ export default {
 
       // validate title
       if (!validator.isLength(val.title, { min: 1, max: 128 })) {
-        this.errors.title = valErrs.length(1, 128)
+        this.errors.title = valErrs.length(1)
         valid = false
       }
 

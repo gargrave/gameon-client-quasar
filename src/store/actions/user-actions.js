@@ -3,7 +3,7 @@ import axios from 'axios'
 import { apiUrls } from '../../globals/urls'
 import { apiHelper } from '../../globals/utils'
 import { parseError, cleanErrors } from '../../globals/errors'
-import { PLATFORMS, PROFILE, USER } from '../mutation-types'
+import { GAMES, PLATFORMS, PROFILE, USER } from '../mutation-types'
 
 export default {
   /**
@@ -40,10 +40,6 @@ export default {
     })
   },
 
-  fetchUser ({ commit }) {
-    // alsdkjf
-  },
-
   /**
    * Attempts to log out the current user. A request will be sent to the API
    * to logout, but the local data will be cleared and the Promise will resolve
@@ -53,6 +49,7 @@ export default {
     return new Promise((resolve, reject) => {
       commit(USER.LOGOUT)
       commit(PROFILE.LOGOUT)
+      commit(GAMES.CLEAR_ALL)
       commit(PLATFORMS.CLEAR_ALL)
       resolve()
     })
@@ -64,21 +61,27 @@ export default {
    */
   createUser ({ dispatch, commit }, userData) {
     return new Promise((resolve, reject) => {
-      const request = apiHelper.axPost(apiUrls.user, userData)
+      const request = apiHelper.axPost(apiUrls.register, userData)
       commit(USER.AJAX_BEGIN)
 
       axios(request)
         .then(res => {
-          // if successful, immediately submit a login request
-          dispatch('login', userData)
-            .then(() => {
-              resolve()
-            }, err => {
-              reject(err)
-            })
+          const authToken = res.data.key
+
+          if (authToken) {
+            commit(USER.LOGIN, authToken)
+            dispatch('loadUserDataFromToken', authToken)
+              .then(() => {
+                resolve()
+              }, err => {
+                reject(err)
+              })
+          } else {
+            commit(USER.AJAX_END)
+            reject(cleanErrors.INVALID_LOGIN)
+          }
         })
         .catch(err => {
-          // if error, reject with error message
           commit(USER.AJAX_END)
           reject(parseError(err))
         })

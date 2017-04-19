@@ -103,8 +103,8 @@ export default {
 
       // validate password
       this.validationErrors.password = ''
-      if (!validator.isLength(val.password, { min: 6 })) {
-        this.validationErrors.password = valErrs.password
+      if (!validator.isLength(val.password, { min: 8 })) {
+        this.validationErrors.password = valErrs.length(8)
         valid = false
       }
 

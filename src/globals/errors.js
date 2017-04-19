@@ -7,8 +7,7 @@ import { Toast } from 'quasar'
 export const valErrs = {
   required: 'This field is required.',
   email: 'Must be a valid email address.',
-  password: 'Must be at least 6 characters long.',
-  length: (min, max) => `Must be between ${min} and ${max} characters long.`
+  length: (min) => `Must be at least ${min} characters long.`
 }
 
 /* ============================================

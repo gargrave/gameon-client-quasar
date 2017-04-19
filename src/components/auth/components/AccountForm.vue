@@ -1,6 +1,14 @@
 <template>
   <form @submit.prevent="onSubmit">
 
+    <!-- username input -->
+    <app-text-input
+      ref="username"
+      name="username"
+      label="Username"
+      :error="errors.username">
+    </app-text-input>
+
     <!-- email input -->
     <app-text-input
       ref="email"
@@ -16,6 +24,15 @@
       name="password"
       label="Password"
       :error="errors.password">
+    </app-text-input>
+
+    <!-- password input -->
+    <app-text-input
+      ref="passwordConfirm"
+      type="password"
+      name="passwordConfirm"
+      label="Re-enter Password"
+      :error="errors.passwordConfirm">
     </app-text-input>
 
     <!-- submit button -->
@@ -60,8 +77,10 @@ export default {
   methods: {
     onSubmit () {
       const payload = {
+        username: this.$refs.username.model,
         email: this.$refs.email.model,
-        password: this.$refs.password.model
+        password: this.$refs.password.model,
+        passwordConfirm: this.$refs.passwordConfirm.model
       }
       this.$emit('submitted', payload)
     },

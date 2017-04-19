@@ -43,6 +43,7 @@ export let routes = {
 export let apiUrls = {
   login: `${apiRoot}/rest-auth/login/`,
   logout: `${apiRoot}/rest-auth/logout/`,
+  register: `${apiRoot}/rest-auth/registration/`,
   user: `${apiRoot}/rest-auth/user/`,
   profiles: `${apiRoot}/rest-auth/user/profile/`,
   games: `${restApiRoot}/games/`,

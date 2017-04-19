@@ -45,33 +45,41 @@ export default {
       working: false,
 
       // form validation errors (if any)
-      validationErrors: {
-        email: '',
-        password: ''
-      },
+      validationErrors: this.getDefaultValidationErrors(),
 
-      // error messages returned from API (e.g. invalid login)
+      // error messages returned from API (e.g. invalid user data)
       apiError: 'This is an error'
     }
   },
 
   methods: {
+    getDefaultValidationErrors () {
+      return {
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: ''
+      }
+    },
+
     /**
-     * Attempts to submit the current user data to the API to login.
+     * Attempts to submit the current user data to the API to create a new user.
      */
     onFormSubmitted (value, event) {
       if (this.isValid(value)) {
-        const userData = {
+        const userPayload = {
+          username: value.username,
           email: value.email,
-          password: value.password
+          password1: value.password,
+          password2: value.passwordConfirm
         }
 
         this.working = true
 
-        this.createUser(userData)
+        this.createUser(userPayload)
           .then(() => {
             Toast.create.positive('Account created!')
-            this.$router.push(localUrls.gamesList)
+            this.$router.push(localUrls.account)
             this.working = false
           }, err => { this.onError(err) })
       }
@@ -82,7 +90,7 @@ export default {
     },
 
     onError (err) {
-      this.validationErrors = { email: '', password: '' }
+      this.validationErrors = this.getDefaultValidationErrors()
       this.apiError = err.message || ''
       this.working = false
     },
@@ -94,17 +102,13 @@ export default {
     isValid (val) {
       let valid = true
 
-      // validate email
-      this.validationErrors.email = ''
-      if (!validator.isEmail(val.email)) {
-        this.validationErrors.email = valErrs.email
-        valid = false
-      }
+      // validate username
+      this.validationErrors.username = ''
 
       // validate password
       this.validationErrors.password = ''
-      if (!validator.isLength(val.password, { min: 6 })) {
-        this.validationErrors.password = valErrs.password
+      if (!validator.isLength(val.password, { min: 8 })) {
+        this.validationErrors.password = valErrs.length(8)
         valid = false
       }
 
@@ -113,7 +117,6 @@ export default {
 
     ...mapActions([
       'checkForStoredLogin',
-      'login',
       'createUser'
     ])
   },
