@@ -1,7 +1,7 @@
 <template>
   <div class="card-content">
     <p><strong>Name:</strong> {{ platform.title }}</p>
-    <p><strong>Added on:</strong> {{ platform.createdAt }}</p>
+    <p><strong>Added on:</strong> {{ platform.created }}</p>
 
     <hr>
     <button

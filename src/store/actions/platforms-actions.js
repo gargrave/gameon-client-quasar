@@ -22,7 +22,7 @@ export default {
 
       axios(request)
         .then(res => {
-          const platforms = res.data.data
+          const platforms = res.data.results
           commit(PLATFORMS.FETCH_SUCCESS, platforms)
           commit(PLATFORMS.AJAX_END)
           resolve()
@@ -180,9 +180,8 @@ export default {
       commit(PLATFORMS.AJAX_BEGIN)
 
       axios(request)
-        .then(res => {
-          const platform = res.data
-          commit(PLATFORMS.DELETE_SUCCESS, platform)
+        .then(() => {
+          commit(PLATFORMS.DELETE_SUCCESS, platformId)
           commit(PLATFORMS.AJAX_END)
           resolve()
         })
