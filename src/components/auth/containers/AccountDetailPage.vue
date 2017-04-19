@@ -30,7 +30,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { Toast } from 'quasar'
+import { Loading, Toast } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
@@ -69,10 +69,14 @@ export default {
   created () {
     // redirect to login page if not logged in
     this.working = true
+    Loading.show({ message: 'Loading...' })
+
     this.checkForStoredLogin()
       .then(() => {
+        Loading.hide()
         this.working = false
       }, () => {
+        Loading.hide()
         this.$router.push(localUrls.login)
         this.working = false
       })

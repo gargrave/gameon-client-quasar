@@ -25,6 +25,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { Loading } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
@@ -57,6 +58,7 @@ export default {
   methods: {
     /** Queries the store to update the local list of Platforms */
     rebuildPlatformsList () {
+      Loading.show({ message: 'Loading...' })
       this.apiError = ''
       this.working = true
 
@@ -64,6 +66,7 @@ export default {
         .then(() => {
           this.working = false
           this.initializing = false
+          Loading.hide()
         }, err => { this.onError(err) })
     },
 
@@ -94,10 +97,13 @@ export default {
 
   created () {
     this.working = true
+    Loading.show({ message: 'Loading...' })
+
     this.checkForStoredLogin()
       .then(() => {
         this.rebuildPlatformsList()
       }, () => {
+        Loading.hide()
         this.$router.push(localUrls.login)
         this.working = false
       })

@@ -26,7 +26,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { Toast } from 'quasar'
+import { Loading, Toast } from 'quasar'
 import validator from 'validator'
 
 import { valErrs } from '../../../globals/errors'
@@ -93,6 +93,7 @@ export default {
       this.validationErrors = this.getDefaultValidationErrors()
       this.apiError = err.message || ''
       this.working = false
+      Loading.hide()
     },
 
     /**
@@ -124,8 +125,11 @@ export default {
   created () {
     // if we already logged in, redirect to account/profile page
     this.working = true
+    Loading.show({ message: 'Loading...' })
+
     this.checkForStoredLogin()
       .then(() => {
+        Loading.hide()
         this.$router.push(localUrls.account)
         this.working = false
       }, err => { this.onError(err) })
