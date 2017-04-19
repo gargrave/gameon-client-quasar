@@ -1,24 +1,26 @@
 <template>
-  <div class="layout-view">
-    <div class="row justify-center">
-      <!-- 'add a game' button -->
-      <button
-        class="list-view-add-button positive shadow-1"
-        @click="onAddClick">
-        Add a Game
-      </button>
-    </div>
+  <transition name="fade">
+    <div class="layout-view">
+      <div class="row justify-center">
+        <!-- 'add a game' button -->
+        <button
+          class="list-view-add-button positive shadow-1"
+          @click="onAddClick">
+          Add a Game
+        </button>
+      </div>
 
-    <div class="row justify-center"
-      v-for="game in games">
+      <div class="row justify-center"
+        v-for="game in games">
 
-      <app-game-card
-        :game="game"
-        @click="onGameClick">
-      </app-game-card>
+        <app-game-card
+          :game="game"
+          @click="onGameClick">
+        </app-game-card>
 
-    </div><!-- /row -->
-  </div><!-- /layout-view -->
+      </div><!-- /row -->
+    </div><!-- /layout-view -->
+  </transition>
 </template>
 
 <script>

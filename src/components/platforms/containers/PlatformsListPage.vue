@@ -1,24 +1,26 @@
 <template>
-  <div class="layout-view">
-    <div class="row justify-center">
-      <!-- 'add a platform' button -->
-      <button
-        class="list-view-add-button positive shadow-1"
-        @click="onAddClick">
-        Add a Platform
-      </button>
-    </div>
+  <transition name="fade">
+    <div class="layout-view">
+      <div class="row justify-center">
+        <!-- 'add a platform' button -->
+        <button
+          class="list-view-add-button positive shadow-1"
+          @click="onAddClick">
+          Add a Platform
+        </button>
+      </div>
 
-    <div class="row justify-center"
-      v-for="platform in platforms">
+      <div class="row justify-center"
+        v-for="platform in platforms">
 
-      <app-platform-card
-        :platform="platform"
-        @click="onPlatformClick">
-      </app-platform-card>
+        <app-platform-card
+          :platform="platform"
+          @click="onPlatformClick">
+        </app-platform-card>
 
-    </div><!-- /row -->
-  </div><!-- /layout-view -->
+      </div><!-- /row -->
+    </div><!-- /layout-view -->
+  </transition>
 </template>
 
 <script>

@@ -1,46 +1,48 @@
 <template>
-  <div class="layout-view">
-    <div class="row justify-center">
+  <transition name="fade">
+    <div class="layout-view">
+      <div class="row justify-center">
 
-      <div class="card">
+        <div class="card">
 
-        <div class="card-title bg-primary text-white">
-          {{ platform.title }}
-        </div><!-- /card-title -->
+          <div class="card-title bg-primary text-white">
+            {{ platform.title }}
+          </div><!-- /card-title -->
 
-        <app-platform-edit-view
-          v-if="editing"
-          :working="working"
-          :apiError="apiError"
-          :platform="platform"
-          @onFormSubmitted="onFormSubmitted"
-          @onFormCancelled="onFormCancelled">
-        </app-platform-edit-view>
+          <app-platform-edit-view
+            v-if="editing"
+            :working="working"
+            :apiError="apiError"
+            :platform="platform"
+            @onFormSubmitted="onFormSubmitted"
+            @onFormCancelled="onFormCancelled">
+          </app-platform-edit-view>
 
-        <app-platform-detail-view
-          v-else
-          :platform="platform"
-          @editClicked="onEditClick"
-          @backClicked="onBackClick">
-        </app-platform-detail-view>
+          <app-platform-detail-view
+            v-else
+            :platform="platform"
+            @editClicked="onEditClick"
+            @backClicked="onBackClick">
+          </app-platform-detail-view>
 
-      </div><!-- /card -->
+        </div><!-- /card -->
 
-    </div><!-- /row -->
+      </div><!-- /row -->
 
-    <div class="row justify-center">
-      <div class="card">
-        <div class="card-content">
-          <button
-            class="negative full-width"
-            @click="onDeleteClick">
-            Delete
-          </button>
-        </div>
-      </div><!-- /card -->
-    </div><!-- /row -->
+      <div class="row justify-center">
+        <div class="card">
+          <div class="card-content">
+            <button
+              class="negative full-width"
+              @click="onDeleteClick">
+              Delete
+            </button>
+          </div>
+        </div><!-- /card -->
+      </div><!-- /row -->
 
-  </div><!-- /layout-view -->
+    </div><!-- /layout-view -->
+  </transition>
 </template>
 
 <script>

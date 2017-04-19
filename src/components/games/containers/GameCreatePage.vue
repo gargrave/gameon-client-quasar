@@ -1,27 +1,29 @@
 <template>
-  <div class="layout-view">
-    <div class="row justify-center">
+  <transition name="fade">
+    <div class="layout-view">
+      <div class="row justify-center">
 
-      <div class="card">
+        <div class="card">
 
-        <div class="card-title bg-primary text-white">
-          Create a Game
-        </div><!-- /card-title -->
+          <div class="card-title bg-primary text-white">
+            Create a Game
+          </div><!-- /card-title -->
 
-        <div class="card-content">
-          <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
-          <app-game-form
-            :working="working"
-            :platforms="platforms"
-            @submitted="onFormSubmitted"
-            @cancelled="onFormCancelled">
-          </app-game-form>
-        </div><!-- /card-content -->
+          <div class="card-content">
+            <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
+            <app-game-form
+              :working="working"
+              :platforms="platforms"
+              @submitted="onFormSubmitted"
+              @cancelled="onFormCancelled">
+            </app-game-form>
+          </div><!-- /card-content -->
 
-      </div><!-- /card -->
+        </div><!-- /card -->
 
-    </div><!-- /row -->
-  </div><!-- /layout-view -->
+      </div><!-- /row -->
+    </div><!-- /layout-view -->
+  </transition>
 </template>
 
 <script>

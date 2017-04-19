@@ -1,25 +1,27 @@
 <template>
-  <div class="layout-view">
-    <div class="row justify-center">
-      <div class="card">
+  <transition name="fade">
+    <div class="layout-view">
+      <div class="row justify-center">
+        <div class="card">
 
-        <div class="card-title bg-primary text-white">
-          Log In
-        </div><!-- /card-title -->
+          <div class="card-title bg-primary text-white">
+            Log In
+          </div><!-- /card-title -->
 
-        <div class="card-content">
-          <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
-          <app-login-form
-            :working="working"
-            :errors="validationErrors"
-            @submitted="onFormSubmitted"
-            @cancelled="onFormCancelled">
-          </app-login-form>
-        </div><!-- /card-content -->
+          <div class="card-content">
+            <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
+            <app-login-form
+              :working="working"
+              :errors="validationErrors"
+              @submitted="onFormSubmitted"
+              @cancelled="onFormCancelled">
+            </app-login-form>
+          </div><!-- /card-content -->
 
-      </div><!-- /card -->
-    </div><!-- /row -->
-  </div><!-- /layout-view -->
+        </div><!-- /card -->
+      </div><!-- /row -->
+    </div><!-- /layout-view -->
+  </transition>
 </template>
 
 <script>
