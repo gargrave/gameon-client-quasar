@@ -22,7 +22,6 @@ import { mapActions } from 'vuex'
 
 import { localUrls } from '../globals/urls'
 
-
 export default {
   data: () => ({
     initializing: true,
