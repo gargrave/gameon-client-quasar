@@ -74,7 +74,6 @@ export default {
 
   loadUserDataFromToken ({ getters, dispatch, commit }, authToken) {
     return new Promise((resolve, reject) => {
-      console.log('TODO: Need to implement loading mock User Profile')
       resolve()
     })
   },
