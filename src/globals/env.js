@@ -6,8 +6,8 @@ const ENV = {
   PROD: 2
 }
 
-const STAGING_SITE_URL_CHECK = 'gameon-app-dev.netlify.com'
-const PROD_SITE_URL_CHECK = 'not specified'
+const STAGING_SITE_URL_CHECK = ''
+const PROD_SITE_URL_CHECK = ''
 
 let appEnv = ENV.PROD;
 

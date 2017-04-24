@@ -1,7 +1,7 @@
 import env from './env'
 
 const DEV_API_ROOT_URL = 'http://localhost:8000'
-const STAGING_API_ROOT_URL = 'https://gameon-app-dev.herokuapp.com'
+const STAGING_API_ROOT_URL = ''
 const PROD_API_ROOT_URL = ''
 
 let apiRoot
