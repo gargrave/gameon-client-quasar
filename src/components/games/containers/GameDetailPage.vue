@@ -50,10 +50,10 @@
 import { mapActions, mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 
-import gameData from '../../../data/game-data'
 import dialogs from '../../../globals/dialogs'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
+import GameModel from '../../../models/game'
 
 import GameDetailView from '../components/GameDetailView'
 import GameEditView from '../components/GameEditView'
@@ -73,7 +73,7 @@ export default {
     // whether we are in editing or viewing mode
     editing: false,
     // the working copy of the instance
-    game: gameData.buildGame()
+    game: GameModel.empty()
   }),
 
   computed: {
@@ -115,7 +115,7 @@ export default {
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const updatedData = gameData.buildDataForUpdate(value)
+      const updatedData = GameModel.toAPI(value)
 
       this.working = true
       this.apiError = ''
