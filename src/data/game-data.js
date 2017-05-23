@@ -30,7 +30,7 @@ export default {
   buildDataForCreate (data) {
     return {
       title: data.title ? data.title.trim() : '',
-      platformId: parsePlatformData(data),
+      platform: parsePlatformData(data),
       dates: data.dates || [],
       tags: data.tags || [],
       finished: data.finished || false
