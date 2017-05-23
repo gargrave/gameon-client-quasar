@@ -2,11 +2,12 @@
   <div id="q-app">
     <q-layout>
 
-      <div slot="header" class="toolbar">
-        <app-title-bar></app-title-bar>
+      <div slot="header">
+        <app-title-bar @toggleDrawer="toggleDrawer">
+        </app-title-bar>
       </div>
 
-      <app-side-nav></app-side-nav>
+      <app-side-nav ref="sideNav"></app-side-nav>
 
       <router-view></router-view>
 
@@ -22,6 +23,13 @@ export default {
   components: {
     appSideNav: SideNav,
     appTitleBar: TitleBar
+  },
+
+  methods: {
+    // fowards the 'open()' call to the child drawer
+    toggleDrawer () {
+      this.$refs.sideNav.open()
+    }
   }
 }
 </script>
