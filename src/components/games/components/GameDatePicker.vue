@@ -185,7 +185,7 @@ export default {
         return !this.datesRemoved.includes(d)
       })
 
-      dates.sort()
+      dates.sort().reverse()
       return dates
     },
 
