@@ -63,6 +63,7 @@
 <script>
 import { cloneDeep } from 'lodash'
 
+import toast from '../../../globals/toasts'
 import { areEqual, validate } from '../utils/gameValidator'
 import GameModel from '../../../models/game'
 
@@ -145,9 +146,11 @@ export default {
       const { errors, valid } = validate(payload)
 
       if (valid && hasChanges) {
-        console.log('submit')
-        // this.$emit('submitted', payload)
+        this.$emit('submitted', payload)
       } else {
+        if (!hasChanges) {
+          toast.noChanges()
+        }
         this.errors = errors
       }
     },
