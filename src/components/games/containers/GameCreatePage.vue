@@ -31,7 +31,7 @@ import { mapActions, mapGetters } from 'vuex'
 
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
-import gameData from '../../../data/game-data'
+import GameModel from '../../../models/game'
 
 import GameForm from '../components/GameForm'
 
@@ -47,7 +47,7 @@ export default {
     // error messages returned from API (e.g. invalid data)
     apiError: '',
     // model for new Game
-    newGame: gameData.buildGame()
+    newGame: GameModel.empty()
   }),
 
   computed: {
@@ -59,7 +59,7 @@ export default {
   methods: {
     /** Callback for 'submit' event from the form; attempt to create a new instance on the server. */
     onFormSubmitted (value) {
-      const newGame = gameData.buildDataForCreate(value)
+      const newGame = GameModel.toAPI(value)
 
       this.working = true
       this.apiError = ''
