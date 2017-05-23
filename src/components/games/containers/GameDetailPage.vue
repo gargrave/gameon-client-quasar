@@ -48,6 +48,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { cloneDeep } from 'lodash'
 
 import gameData from '../../../data/game-data'
 import dialogs from '../../../globals/dialogs'
@@ -158,7 +159,8 @@ export default {
         } else {
           this.findGame(gameId)
             .then(gameRes => {
-              this.game = Object.assign({}, gameRes)
+              this.game = cloneDeep(gameRes)
+              this.game.dates.sort().reverse()
               this.working = false
               this.initializing = false
             }, () => {
