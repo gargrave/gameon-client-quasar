@@ -1,23 +1,21 @@
 import env from './env'
 
 const DEV_API_ROOT_URL = 'http://localhost:8000'
-const STAGING_API_ROOT_URL = ''
-const PROD_API_ROOT_URL = ''
+const STAGING_API_ROOT_URL = 'https://gameon-app-dev.herokuapp.com'
+const PROD_API_ROOT_URL = 'https://gameon-app.herokuapp.com'
 
 let apiRoot
-let restApiRoot;
+let restApiRoot
 
 (function setUrls () {
   if (env.isProd()) {
     apiRoot = PROD_API_ROOT_URL
-    restApiRoot = `${apiRoot}/api/v1`
   } else if (env.isStaging()) {
     apiRoot = STAGING_API_ROOT_URL
-    restApiRoot = `${apiRoot}/api/v1`
   } else {
     apiRoot = DEV_API_ROOT_URL
-    restApiRoot = `${apiRoot}/api/v1`
   }
+  restApiRoot = `${apiRoot}/api/v1`
 })()
 
 // named constants for local routes

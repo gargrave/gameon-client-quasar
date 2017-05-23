@@ -6,8 +6,8 @@ const ENV = {
   PROD: 2
 }
 
-const STAGING_SITE_URL_CHECK = ''
-const PROD_SITE_URL_CHECK = ''
+const STAGING_SITE_URL_CHECK = 'gameon-app-dev'
+const PROD_SITE_URL_CHECK = 'gameon-app'
 
 let appEnv = ENV.PROD;
 
