@@ -61,11 +61,10 @@
 </template>
 
 <script>
-import validator from 'validator'
+import { cloneDeep } from 'lodash'
 
-import gameData from '../../../data/game-data'
-import { valErrs } from '../../../globals/errors'
-import toasts from '../../../globals/toasts'
+import { areEqual, validate } from '../utils/gameValidator'
+import GameModel from '../../../models/game'
 
 import TextInput from '../../common/forms/TextInput'
 import GameDatePicker from './GameDatePicker'
@@ -95,13 +94,9 @@ export default {
   },
 
   data: () => ({
-    modelData: gameData.buildGame(),
-    selectedPlatform: '',
-    // collection of validation errors
-    errors: {
-      title: '',
-      platform: ''
-    }
+    modelData: GameModel.empty(),
+    errors: GameModel.emptyValidationErrors(),
+    selectedPlatform: ''
   }),
 
   computed: {
@@ -121,45 +116,9 @@ export default {
   },
 
   methods: {
-    /**
-     * Checks if the data submitted by the form is valid, and sets any necessary error messages.
-     * @return Whether the data is valid.
-     */
-    isValid (val) {
-      let valid = true
-      this.errors = {
-        title: '',
-        platform: ''
-      }
-
-      // validate title
-      if (!validator.isLength(val.title, { min: 1, max: 128 })) {
-        this.errors.title = valErrs.length(1)
-        valid = false
-      }
-
-      // validate platform
-      if (!val.platform) {
-        this.errors.platform = valErrs.required
-        valid = false
-      }
-
-      // if we have an 'original' value, compare it against the new value to ensure that something has changed
-      // if not, do not submit the update request
-      if (this.originalGame) {
-        const updatedGame = gameData.buildGame(val)
-        if (gameData.areIndentical(this.originalGame, updatedGame)) {
-          toasts.noChanges()
-          valid = false
-        }
-      }
-
-      return valid
-    },
-
     /** Builds the data structure required for submitting an update to the current Game */
-    getDataForSubmit () {
-      let submitData = Object.assign({}, this.modelData)
+    buildPayload () {
+      let submitData = cloneDeep(this.modelData)
       submitData.title = this.$refs.title.model
 
       // set the platform; we need to parse this from a string to the full Platform object
@@ -181,10 +140,15 @@ export default {
 
     /** Callback for submit button; if data validates, emit the 'submitted' event. */
     onSubmit () {
-      const payload = this.getDataForSubmit()
+      const payload = this.buildPayload()
+      const hasChanges = !this.originalGame || !areEqual(payload, this.originalGame)
+      const { errors, valid } = validate(payload)
 
-      if (this.isValid(payload)) {
-        this.$emit('submitted', payload)
+      if (valid && hasChanges) {
+        console.log('submit')
+        // this.$emit('submitted', payload)
+      } else {
+        this.errors = errors
       }
     },
 
@@ -195,8 +159,9 @@ export default {
   },
 
   created () {
+    // if we received an 'originalGame' prop, we are editing an existing one, so make a clone of it
     if (this.originalGame) {
-      this.modelData = Object.assign({}, this.originalGame)
+      this.modelData = cloneDeep(this.originalGame)
       this.selectedPlatform = this.modelData.platform.title
     }
   }
