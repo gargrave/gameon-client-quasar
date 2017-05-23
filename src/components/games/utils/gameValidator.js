@@ -2,17 +2,7 @@ import { cloneDeep, isEqual } from 'lodash'
 import validator from 'validator'
 
 import { valErrs } from '../../../globals/errors'
-
-function parsePlatform (game) {
-  if (game.platform) {
-    if (Number.isInteger(game.platform)) {
-      return game.platform
-    } else if (game.platform.id) {
-      return game.platform.id
-    }
-  }
-  throw new TypeError('Game does not have valid Platform data.')
-}
+import { parsePlatform } from '../../../models/game'
 
 export function validate (data) {
   let valid = true

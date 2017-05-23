@@ -1,5 +1,16 @@
 import { cloneDeep } from 'lodash'
 
+export function parsePlatform (game) {
+  if (game.platform) {
+    if (Number.isInteger(game.platform)) {
+      return game.platform
+    } else if (game.platform.id) {
+      return game.platform.id
+    }
+  }
+  throw new TypeError('Game does not have valid Platform data.')
+}
+
 export default {
   empty () {
     return {
@@ -15,7 +26,7 @@ export default {
   toAPI (data) {
     let payload = {
       title: data.title || '',
-      platform: data.platform,
+      platform: parsePlatform(data.platform),
       finished: data.finished || false,
       dates: data.dates || []
     }
