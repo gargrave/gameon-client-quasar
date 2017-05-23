@@ -26,7 +26,7 @@ export default {
   toAPI (data) {
     let payload = {
       title: data.title || '',
-      platform: parsePlatform(data.platform),
+      platform: parsePlatform(data),
       finished: data.finished || false,
       dates: data.dates || []
     }
