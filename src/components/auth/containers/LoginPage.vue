@@ -74,6 +74,7 @@ export default {
             Toast.create.positive('Logged in.')
             this.$router.push(localUrls.gamesList)
             this.working = false
+            Loading.hide()
           }, err => { this.onError(err) })
       }
     },
@@ -126,9 +127,7 @@ export default {
 
     this.checkForStoredLogin()
       .then(() => {
-        Loading.hide()
         this.$router.push(localUrls.account)
-        this.working = false
       }, err => { this.onError(err) })
   }
 }

@@ -58,9 +58,9 @@ export default {
   methods: {
     /** Queries the store to update the local list of Platforms */
     rebuildPlatformsList () {
-      Loading.show({ message: 'Loading...' })
       this.apiError = ''
       this.working = true
+      Loading.show({ message: 'Loading...' })
 
       this.getCachedOrFetchPlatforms()
         .then(() => {
@@ -103,9 +103,9 @@ export default {
       .then(() => {
         this.rebuildPlatformsList()
       }, () => {
-        Loading.hide()
         this.$router.push(localUrls.login)
         this.working = false
+        Loading.hide()
       })
   }
 }

@@ -153,6 +153,7 @@ export default {
 
   created () {
     this.working = true
+    Loading.show({ message: 'Loading...' })
 
     this.checkForStoredLogin()
       .then(() => {
