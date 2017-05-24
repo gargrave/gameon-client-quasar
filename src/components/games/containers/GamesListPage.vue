@@ -58,9 +58,9 @@ export default {
   methods: {
     /** Queries the store to update the local list of Games */
     rebuildGamesList () {
-      Loading.show({ message: 'Loading...' })
       this.apiError = ''
       this.working = true
+      Loading.show({ message: 'Loading...' })
 
       this.getCachedOrFetchGames()
         .then(() => {
@@ -103,9 +103,9 @@ export default {
       .then(() => {
         this.rebuildGamesList()
       }, () => {
-        Loading.hide()
         this.$router.push(localUrls.login)
         this.working = false
+        Loading.hide()
       })
   }
 }

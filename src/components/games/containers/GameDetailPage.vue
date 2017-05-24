@@ -48,6 +48,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { Loading } from 'quasar'
 import { cloneDeep } from 'lodash'
 
 import dialogs from '../../../globals/dialogs'
@@ -103,12 +104,14 @@ export default {
       dialogs.confirmDelete('Game', () => {
         this.working = true
         this.apiError = ''
+        Loading.show({ message: 'Deleting Game...' })
 
         this.deleteGame(this.game.id)
           .then(() => {
             toasts.deleteConfirm('Game')
             this.$router.push(localUrls.gamesList)
             this.working = false
+            Loading.hide()
           }, err => { this.onError(err) })
       })
     },
@@ -119,6 +122,7 @@ export default {
 
       this.working = true
       this.apiError = ''
+      Loading.show({ message: 'Saving Game...' })
 
       this.updateGame(updatedData)
         .then(() => {
@@ -138,6 +142,7 @@ export default {
       this.apiError = err.message || ''
       this.working = false
       this.initializing = false
+      Loading.hide()
     },
 
     ...mapActions([
@@ -150,6 +155,7 @@ export default {
 
   created () {
     this.working = true
+    Loading.show({ message: 'Loading...' })
 
     this.checkForStoredLogin()
       .then(() => {
@@ -163,11 +169,10 @@ export default {
               this.game.dates.sort().reverse()
               this.working = false
               this.initializing = false
+              Loading.hide()
             }, () => {
               // if no valid instance, return to the List view
               this.$router.push(localUrls.gamesList)
-              this.working = false
-              this.initializing = false
             })
         }
       }, err => { this.onError(err) })
