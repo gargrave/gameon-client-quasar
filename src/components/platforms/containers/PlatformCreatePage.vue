@@ -30,7 +30,7 @@ import { mapActions } from 'vuex'
 
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
-import platformData from '../../../data/platform-data'
+import PlatformModel from '../../../models/platform'
 
 import PlatformForm from '../components/PlatformForm'
 
@@ -46,13 +46,13 @@ export default {
     // error messages returned from API (e.g. invalid data)
     apiError: '',
     // model for new Platform
-    newPlatform: platformData.buildPlatform()
+    newPlatform: PlatformModel.empty()
   }),
 
   methods: {
     /** Callback for 'submit' event from the form; attempt to create a new instance on the server. */
     onFormSubmitted (value) {
-      const newPlatform = platformData.buildDataForCreate(value)
+      const newPlatform = PlatformModel.toAPI(value)
 
       this.working = true
       this.apiError = ''
