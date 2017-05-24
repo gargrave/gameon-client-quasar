@@ -47,11 +47,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { Loading } from 'quasar'
+import { cloneDeep } from 'lodash'
 
-import platformData from '../../../data/platform-data'
 import dialogs from '../../../globals/dialogs'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
+import PlatformModel from '../../../models/platform'
 
 import PlatformDetailView from '../components/PlatformDetailView'
 import PlatformEditView from '../components/PlatformEditView'
@@ -71,7 +73,7 @@ export default {
     // whether we are in editing or viewing mode
     editing: false,
     // the working copy of the instance
-    platform: platformData.buildPlatform()
+    platform: PlatformModel.empty()
   }),
 
   computed: {
@@ -100,28 +102,32 @@ export default {
       dialogs.confirmDelete('Platform', () => {
         this.working = true
         this.apiError = ''
+        Loading.show({ message: 'Deleting Platform...' })
 
         this.deletePlatform(this.platform.id)
           .then(() => {
             toasts.deleteConfirm('Platform')
             this.$router.push(localUrls.platformsList)
             this.working = false
+            Loading.hide()
           }, err => { this.onError(err) })
       })
     },
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const updatedData = platformData.buildDataForUpdate(this.platform, value)
+      const updatedData = PlatformModel.toAPI(value)
 
       this.working = true
       this.apiError = ''
+      Loading.show({ message: 'Saving Platform...' })
 
       this.updatePlatform(updatedData)
         .then(() => {
           toasts.updateConfirm('Platform')
           this.$router.push(localUrls.platformsList)
           this.working = false
+          Loading.hide()
         }, err => { this.onError(err) })
     },
 
@@ -156,14 +162,13 @@ export default {
         } else {
           this.findPlatform(platformId)
             .then(platformRes => {
-              this.platform = Object.assign({}, platformRes)
+              this.platform = cloneDeep(platformRes)
               this.working = false
               this.initializing = false
+              Loading.hide()
             }, () => {
               // if no valid instance, return to the List view
               this.$router.push(localUrls.platformsList)
-              this.working = false
-              this.initializing = false
             })
         }
       }, err => { this.onError(err) })
