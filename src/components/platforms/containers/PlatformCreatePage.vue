@@ -27,6 +27,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { Loading } from 'quasar'
 
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
@@ -56,12 +57,14 @@ export default {
 
       this.working = true
       this.apiError = ''
+      Loading.show({ message: 'Saving Platform...' })
 
       this.createPlatform(newPlatform)
         .then(res => {
           toasts.createConfirm('Platform')
           this.$router.push(`${localUrls.platformsList}/${res.id}`)
           this.working = false
+          Loading.hide()
         }, err => { this.onError(err) })
     },
 
@@ -74,6 +77,7 @@ export default {
     onError (err) {
       this.apiError = err.message || ''
       this.working = false
+      Loading.hide()
     },
 
     ...mapActions([
@@ -84,14 +88,15 @@ export default {
 
   created () {
     this.working = true
+    Loading.show({ message: 'Loading...' })
+
     this.checkForStoredLogin()
       .then(() => {
         // if logged in, no further action needed
         this.initializing = false
+        Loading.hide()
       }, () => {
         this.$router.push(localUrls.login)
-        this.working = false
-        this.initializing = false
       })
   }
 }
