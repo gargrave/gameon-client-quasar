@@ -75,6 +75,7 @@ export default {
           Toast.create.info('Logged out!')
           this.$router.push(localUrls.login)
           this.working = false
+          Loading.hide()
         })
     },
 
@@ -91,14 +92,14 @@ export default {
 
     this.checkForStoredLogin()
       .then(() => {
-        Loading.hide()
         this.working = false
         this.initializing = false
-      }, () => {
         Loading.hide()
+      }, () => {
         this.$router.push(localUrls.login)
         this.working = false
         this.initializing = false
+        Loading.hide()
       })
   }
 }

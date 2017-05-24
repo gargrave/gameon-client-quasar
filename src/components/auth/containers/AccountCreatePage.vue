@@ -26,10 +26,11 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { Loading, Toast } from 'quasar'
+import { Loading } from 'quasar'
 import validator from 'validator'
 
 import { valErrs } from '../../../globals/errors'
+import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 
 import AccountForm from '../components/AccountForm'
@@ -75,12 +76,14 @@ export default {
         }
 
         this.working = true
+        Loading.show({ message: 'Creating Account...' })
 
         this.createUser(userPayload)
           .then(() => {
-            Toast.create.positive('Account created!')
+            toasts.createConfirm('Account')
             this.$router.push(localUrls.account)
             this.working = false
+            Loading.hide()
           }, err => { this.onError(err) })
       }
     },
@@ -129,9 +132,9 @@ export default {
 
     this.checkForStoredLogin()
       .then(() => {
-        Loading.hide()
         this.$router.push(localUrls.account)
         this.working = false
+        Loading.hide()
       }, err => { this.onError(err) })
   }
 }
