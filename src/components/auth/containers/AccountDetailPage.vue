@@ -68,6 +68,8 @@ export default {
      */
     onLogoutClick () {
       this.working = true
+      Loading.show({ message: 'Logging out...' })
+
       this.logout()
         .then(() => {
           Toast.create.info('Logged out!')

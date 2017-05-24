@@ -67,6 +67,7 @@ export default {
         }
 
         this.working = true
+        Loading.show({ message: 'Logging in...' })
 
         this.login(userPayload)
           .then(() => {
