@@ -141,6 +141,7 @@ export default {
       this.apiError = err.message || ''
       this.working = false
       this.initializing = false
+      Loading.hide()
     },
 
     ...mapActions([
