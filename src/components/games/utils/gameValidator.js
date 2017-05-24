@@ -2,14 +2,12 @@ import { cloneDeep, isEqual } from 'lodash'
 import validator from 'validator'
 
 import { valErrs } from '../../../globals/errors'
-import { parsePlatform } from '../../../models/game'
+import GameModel, { parsePlatform } from '../../../models/game'
 
 export function validate (data) {
   let valid = true
   let testData = cloneDeep(data)
-  let errors = {
-    title: ''
-  }
+  let errors = GameModel.emptyValidationErrors()
 
   // validate title -> required
   if (validator.isEmpty(testData.title)) {
