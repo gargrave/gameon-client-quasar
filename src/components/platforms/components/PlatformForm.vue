@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import validator from 'validator'
+import { cloneDeep } from 'lodash'
 
-import platformData from '../../../data/platform-data'
-import { valErrs } from '../../../globals/errors'
 import toasts from '../../../globals/toasts'
+import PlatformModel from '../../../models/platform'
+import { areEqual, validate } from '../utils/platformValidator'
 
 import TextInput from '../../common/forms/TextInput'
 
@@ -56,54 +56,40 @@ export default {
   },
 
   data: () => ({
-    // collection of validation errors
-    errors: {
-      title: ''
-    }
+    modelData: PlatformModel.empty(),
+    errors: PlatformModel.emptyValidationErrors()
   }),
 
   methods: {
-    /**
-     * Checks if the data submitted by the form is valid, and sets any necessary error messages.
-     * @return Whether the data is valid.
-     */
-    isValid (val) {
-      let valid = true
-
-      // validate title
-      this.errors.title = ''
-      if (!validator.isLength(val.title, { min: 1, max: 128 })) {
-        this.errors.title = valErrs.length(1)
-        valid = false
-      }
-
-      // if we have an 'original' value, compare it against the new value to ensure that something has changed
-      // if not, do not submit the update request
-      if (this.originalPlatform) {
-        const updatedPlatform = platformData.buildPlatform(val)
-        if (platformData.areIndentical(this.originalPlatform, updatedPlatform)) {
-          toasts.noChanges()
-          valid = false
-        }
-      }
-
-      return valid
-    },
-
     /** Callback for submit button; if data validates, emit the 'submitted' event. */
     onSubmit () {
-      const payload = {
-        title: this.$refs.title.model
-      }
+      const payload = Object.assign({},
+        cloneDeep(this.modelData),
+        { title: this.$refs.title.model }
+      )
+      const hasChanges = !this.originalPlatform || !areEqual(payload, this.originalPlatform)
+      const { errors, valid } = validate(payload)
 
-      if (this.isValid(payload)) {
+      if (valid && hasChanges) {
         this.$emit('submitted', payload)
+      } else {
+        if (!hasChanges) {
+          toasts.noChanges()
+        }
+        this.errors = errors
       }
     },
 
     /** Callback for cancel button; simply emit the 'cancelled' event. */
     onCancel () {
       this.$emit('cancelled')
+    }
+  },
+
+  created () {
+    // if we received an 'originalPlatform' prop, we are editing an existing one, so make a clone of it
+    if (this.originalPlatform) {
+      this.modelData = cloneDeep(this.originalPlatform)
     }
   }
 }
