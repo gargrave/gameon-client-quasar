@@ -1,8 +1,13 @@
 <template>
   <div class="card-content">
     <p><strong>Name:</strong> {{ game.title }}</p>
+    <p><strong>Platform:</strong> {{ game.platform.title }}</p>
+    <hr>
+    <p><strong>Played:</strong> {{ playCountString }}</p>
     <p><strong>Last Played:</strong> {{ lastPlayedString }}</p>
-    <p><strong>Added on:</strong> {{ game.created }}</p>
+    <hr>
+    <p><strong>Added on:</strong> {{ addedOnString }}</p>
+    <p><strong>Updated on:</strong> {{ updatedOnString }}</p>
 
     <hr>
     <button
@@ -31,9 +36,31 @@ export default {
   },
 
   computed: {
+    playCountString () {
+      if (this.game.dates.length === 0) {
+        return 'Never'
+      } else {
+        const len = this.game.dates.length
+        return `${len} times`
+      }
+    },
+
     lastPlayedString () {
       return dateHelper.timeAgoString(this.game.lastPlayed)
+    },
+
+    addedOnString () {
+      return dateHelper.cleanDateWithTrailingDay(this.game.created)
+    },
+
+    updatedOnString () {
+      return dateHelper.cleanDateWithTrailingDay(this.game.modified)
     }
+  },
+
+  created () {
+    console.log('this.game:')
+    console.log(this.game)
   }
 }
 </script>
