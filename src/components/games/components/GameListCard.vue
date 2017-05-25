@@ -9,7 +9,7 @@
         <div class="column justify-center">
           <h6 class="list-view-card-title">{{ game.title }}</h6>
           <p class="text-tertiary">
-            <small>Last played: {{ game.lastPlayed || 'Never' }}</small>
+            <small>Last played: {{ lastPlayedString }}</small>
           </p>
         </div><!-- /column -->
 
@@ -23,12 +23,20 @@
 </template>
 
 <script>
+import dateHelper from '../../../utils/dateHelper'
+
 export default {
   props: {
     // the Game object for this instance
     game: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    lastPlayedString () {
+      return dateHelper.timeAgoString(this.game.lastPlayed)
     }
   }
 }
