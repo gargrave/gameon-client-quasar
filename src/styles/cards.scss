@@ -3,6 +3,14 @@
   background-color: #fdfdfd;
 }
 
+.card > .card-content hr {
+  @include hr-light();
+}
+
+.card > .card-content p {
+  margin: 0 0 .6rem;
+}
+
 .list-view-card {
   margin-bottom: $listViewMarginBtm !important;
 }

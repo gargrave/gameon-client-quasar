@@ -1,5 +1,13 @@
 @import 'base';
 
+body {
+  background-color: #eaeae8;
+}
+
+hr.hr-light {
+  @include hr-light();
+}
+
 .clamp-width {
   max-width: $clampMaxWidth;
 }
