@@ -1,7 +1,4 @@
-@import 'variables';
-@import 'transitions';
-@import 'overrides';
-@import 'forms';
+@import 'base';
 
 .clamp-width {
   max-width: $clampMaxWidth;
