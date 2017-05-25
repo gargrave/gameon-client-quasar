@@ -1,4 +1,4 @@
-import { verboseLog } from './utils'
+import { verboseLog } from '../utils/logger'
 
 const ENV = {
   DEV: 0,

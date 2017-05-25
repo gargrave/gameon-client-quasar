@@ -1,5 +1,5 @@
 import env from '../../../globals/env'
-import { verboseLog } from '../../../globals/utils'
+import { verboseLog } from '../../../utils/logger'
 
 import { types, getMockError } from '../mock-errors'
 import mockData from './user-data-mock'
