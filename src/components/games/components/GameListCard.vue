@@ -7,10 +7,10 @@
       <div class="row justify-between">
 
         <div class="column justify-center">
-          <h6 style="display: inline;">
-            {{ game.title }}
-          </h6>
-          <p>Last played: [TODO: show the date, ya dingus!]</p>
+          <h6 class="list-view-card-title">{{ game.title }}</h6>
+          <p class="text-tertiary">
+            <small>Last played: {{ game.lastPlayed || 'Never' }}</small>
+          </p>
         </div><!-- /column -->
 
         <div class="column justify-center">
