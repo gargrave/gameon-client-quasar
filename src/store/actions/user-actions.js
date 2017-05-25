@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 import { apiUrls } from '../../globals/urls'
-import { apiHelper } from '../../globals/utils'
 import { parseError, cleanErrors } from '../../globals/errors'
+import apiHelper from '../../utils/apiHelper'
 import { GAMES, PLATFORMS, PROFILE, USER } from '../mutation-types'
 
 export default {
