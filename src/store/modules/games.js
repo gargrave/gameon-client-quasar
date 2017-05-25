@@ -58,13 +58,15 @@ export default {
      = Games creating/editing
      ============================================= */
     [GAMES.CREATE_SUCCESS] (state, payload) {
-      state.games.push(payload)
+      state.games.push(GameModel.fromAPI(payload))
+      sortGames(state.games)
     },
 
     [GAMES.UPDATE_SUCCESS] (state, game) {
       state.games = [...state.games.filter(
         s => Number(s.id) !== Number(game.id)
-      ), game]
+      ), GameModel.fromAPI(game)]
+      sortGames(state.games)
     },
 
     [GAMES.DELETE_SUCCESS] (state, gameId) {

@@ -44,7 +44,6 @@ export default {
 
   fromAPI (data) {
     let updated = {
-      platform: data.platform.id,
       lastPlayed: data.dates[0] || null
     }
 
