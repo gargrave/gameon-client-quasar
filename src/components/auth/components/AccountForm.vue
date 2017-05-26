@@ -1,38 +1,42 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="$emit('submitted')">
 
     <!-- username input -->
     <app-text-input
-      ref="username"
       name="username"
       label="Username"
-      :error="errors.username">
+      :error="errors.username"
+      :value="user && user.username || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- email input -->
     <app-text-input
-      ref="email"
       name="email"
       label="Email"
-      :error="errors.email">
+      :error="errors.email"
+      :value="user && user.email || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- password input -->
     <app-text-input
-      ref="password"
       type="password"
-      name="password"
+      name="password1"
       label="Password"
-      :error="errors.password">
+      :error="errors.password1"
+      :value="user && user.password1 || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- password input -->
     <app-text-input
-      ref="passwordConfirm"
       type="password"
-      name="passwordConfirm"
+      name="password2"
       label="Re-enter Password"
-      :error="errors.passwordConfirm">
+      :error="errors.password2"
+      :value="user && user.password2 || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- submit button -->
@@ -45,7 +49,7 @@
     <!-- cancel/back button -->
     <button
       class="secondary pull-right"
-      @click.prevent="onCancel">
+      @click.prevent="$emit('cancelled')">
       Log In
     </button>
 
@@ -53,7 +57,7 @@
 </template>
 
 <script>
-import TextInput from '../../common/forms/TextInput'
+import TextInput from '../../common/forms/TextInput2'
 
 export default {
   components: {
@@ -66,27 +70,20 @@ export default {
       type: Boolean,
       required: true
     },
-
     // collection of validation errors
     errors: {
       type: Object,
       required: true
-    }
-  },
-
-  methods: {
-    onSubmit () {
-      const payload = {
-        username: this.$refs.username.model,
-        email: this.$refs.email.model,
-        password: this.$refs.password.model,
-        passwordConfirm: this.$refs.passwordConfirm.model
-      }
-      this.$emit('submitted', payload)
     },
-
-    onCancel () {
-      this.$emit('cancelled')
+    // user data model
+    user: {
+      type: Object,
+      required: true
+    },
+    // callback for text input changing
+    handleInput: {
+      type: Function,
+      required: true
     }
   }
 }

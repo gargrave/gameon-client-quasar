@@ -12,7 +12,9 @@
             <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
             <app-account-form
               :working="working"
-              :errors="validationErrors"
+              :errors="errors"
+              :user="user"
+              :handleInput="handleInput"
               @submitted="onFormSubmitted"
               @cancelled="onFormCancelled">
             </app-account-form>
@@ -27,11 +29,11 @@
 <script>
 import { mapActions } from 'vuex'
 import { Loading } from 'quasar'
-import validator from 'validator'
 
-import { valErrs } from '../../../globals/errors'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
+import UserRegisterModel from '../../../models/userRegister'
+import { validate } from '../utils/userRegisterValidator'
 
 import AccountForm from '../components/AccountForm'
 
@@ -44,22 +46,20 @@ export default {
     return {
       // whether any operations are currently running
       working: false,
-
+      // error messages returned from API (e.g. invalid login)
+      apiError: '',
+      // model for registration data
+      user: UserRegisterModel.empty(),
       // form validation errors (if any)
-      validationErrors: this.getDefaultValidationErrors(),
-
-      // error messages returned from API (e.g. invalid user data)
-      apiError: 'This is an error'
+      errors: UserRegisterModel.emptyValidationErrors()
     }
   },
 
   methods: {
-    getDefaultValidationErrors () {
-      return {
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: ''
+    handleInput (e) {
+      let key = e.target.name
+      if (key in this.user) {
+        this.user[key] = e.target.value
       }
     },
 
@@ -67,24 +67,22 @@ export default {
      * Attempts to submit the current user data to the API to create a new user.
      */
     onFormSubmitted (value, event) {
-      if (this.isValid(value)) {
-        const userPayload = {
-          username: value.username,
-          email: value.email,
-          password1: value.password,
-          password2: value.passwordConfirm
-        }
+      const user = UserRegisterModel.toAPI(this.user)
+      const { errors, valid } = validate(user)
 
+      if (valid) {
         this.working = true
         Loading.show({ message: 'Creating Account...' })
 
-        this.createUser(userPayload)
+        this.createUser(user)
           .then(() => {
             toasts.createConfirm('Account')
             this.$router.push(localUrls.account)
             this.working = false
             Loading.hide()
           }, err => { this.onError(err) })
+      } else {
+        this.errors = errors
       }
     },
 
@@ -93,30 +91,9 @@ export default {
     },
 
     onError (err) {
-      this.validationErrors = this.getDefaultValidationErrors()
       this.apiError = err.message || ''
       this.working = false
       Loading.hide()
-    },
-
-    /**
-     * Checks if the data submitted by the form is valid, and sets any necessary error messages.
-     * @return Whether the data is valid.
-     */
-    isValid (val) {
-      let valid = true
-
-      // validate username
-      this.validationErrors.username = ''
-
-      // validate password
-      this.validationErrors.password = ''
-      if (!validator.isLength(val.password, { min: 8 })) {
-        this.validationErrors.password = valErrs.length(8)
-        valid = false
-      }
-
-      return valid
     },
 
     ...mapActions([
