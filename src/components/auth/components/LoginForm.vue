@@ -1,12 +1,14 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="$emit('submitted')">
 
     <!-- username input -->
     <app-text-input
       ref="username"
       name="username"
       label="Username"
-      :error="errors.username">
+      :error="errors.username"
+      :value="user && user.username || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- password input -->
@@ -15,7 +17,9 @@
       type="password"
       name="password"
       label="Password"
-      :error="errors.password">
+      :error="errors.password"
+      :value="user && user.password || ''"
+      :handleInput="handleInput">
     </app-text-input>
 
 
@@ -29,7 +33,7 @@
     <!-- cancel/back button -->
     <button
       class="secondary pull-right"
-      @click.prevent="onCancel">
+      @click.prevent="$emit('cancelled')">
       Sign Up
     </button>
 
@@ -37,7 +41,7 @@
 </template>
 
 <script>
-import TextInput from '../../common/forms/TextInput'
+import TextInput from '../../common/forms/TextInput2'
 
 export default {
   components: {
@@ -50,25 +54,20 @@ export default {
       type: Boolean,
       required: true
     },
-
     // collection of validation errors
     errors: {
       type: Object,
       required: true
-    }
-  },
-
-  methods: {
-    onSubmit () {
-      const payload = {
-        username: this.$refs.username.model,
-        password: this.$refs.password.model
-      }
-      this.$emit('submitted', payload)
     },
-
-    onCancel () {
-      this.$emit('cancelled')
+    // user data model
+    user: {
+      type: Object,
+      required: true
+    },
+    // callback for text input changing
+    handleInput: {
+      type: Function,
+      required: true
     }
   }
 }
