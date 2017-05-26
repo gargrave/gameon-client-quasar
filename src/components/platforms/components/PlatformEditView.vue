@@ -4,8 +4,8 @@
     <app-platform-form
       :working="working"
       :errors="errors"
-      :handleInput="handleInput"
       :originalPlatform="platform"
+      :handleInput="handleInput"
       @submitted="onFormSubmitted"
       @cancelled="onFormCancelled">
     </app-platform-form>

@@ -48,15 +48,15 @@ export default {
       type: Object,
       required: true
     },
-    // callback for text input changing
-    handleInput: {
-      type: Function,
-      required: true
-    },
     // the platform (if any) being edited
     originalPlatform: {
       type: Object,
       required: false
+    },
+    // callback for text input changing
+    handleInput: {
+      type: Function,
+      required: true
     }
   }
 }
