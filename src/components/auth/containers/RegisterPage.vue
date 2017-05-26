@@ -10,14 +10,14 @@
 
           <div class="card-content">
             <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
-            <app-account-form
+            <app-register-form
               :working="working"
               :errors="errors"
               :user="user"
               :handleInput="handleInput"
               @submitted="onFormSubmitted"
               @cancelled="onFormCancelled">
-            </app-account-form>
+            </app-register-form>
           </div><!-- /card-content -->
 
         </div><!-- /card -->
@@ -35,11 +35,11 @@ import { localUrls } from '../../../globals/urls'
 import UserRegisterModel from '../../../models/userRegister'
 import { validate } from '../utils/userRegisterValidator'
 
-import AccountForm from '../components/AccountForm'
+import RegisterForm from '../components/RegisterForm'
 
 export default {
   components: {
-    appAccountForm: AccountForm
+    appRegisterForm: RegisterForm
   },
 
   data () {

@@ -5,8 +5,8 @@ Vue.use(VueRouter)
 
 import { localUrls, routes } from './globals/urls'
 
-import AccountCreatePage from './components/auth/containers/AccountCreatePage'
 import AccountDetailPage from './components/auth/containers/AccountDetailPage'
+import RegisterPage from './components/auth/containers/RegisterPage'
 import LoginPage from './components/auth/containers/LoginPage'
 
 import GameCreatePage from './components/games/containers/GameCreatePage'
@@ -50,7 +50,7 @@ export default new VueRouter({
     },
     {
       path: localUrls.accountCreate,
-      component: AccountCreatePage,
+      component: RegisterPage,
       name: routes.auth.create
     },
 
