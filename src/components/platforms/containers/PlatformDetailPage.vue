@@ -6,21 +6,23 @@
         <div class="card">
 
           <div class="card-title bg-primary text-white">
-            {{ platform.title }}
+            {{ originalPlatform.title }}
           </div><!-- /card-title -->
 
           <app-platform-edit-view
             v-if="editing"
             :working="working"
             :apiError="apiError"
-            :platform="platform"
+            :platform="editingPlatform"
+            :errors="errors"
+            :handleInput="handleInput"
             @onFormSubmitted="onFormSubmitted"
             @onFormCancelled="onFormCancelled">
           </app-platform-edit-view>
 
           <app-platform-detail-view
             v-else
-            :platform="platform"
+            :platform="originalPlatform"
             @editClicked="onEditClick"
             @backClicked="onBackClick">
           </app-platform-detail-view>
@@ -54,6 +56,7 @@ import dialogs from '../../../globals/dialogs'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 import PlatformModel from '../../../models/platform'
+import { areEqual, validate } from '../utils/platformValidator'
 
 import PlatformDetailView from '../components/PlatformDetailView'
 import PlatformEditView from '../components/PlatformEditView'
@@ -73,12 +76,16 @@ export default {
     // whether we are in editing or viewing mode
     editing: false,
     // the working copy of the instance
-    platform: PlatformModel.empty()
+    editingPlatform: PlatformModel.empty(),
+    // the untouched copy of the original instance
+    originalPlatform: PlatformModel.empty(),
+    // local validation errors
+    errors: PlatformModel.emptyValidationErrors()
   }),
 
   computed: {
     isWorking () {
-      return this.working || this.platformsAjaxPending
+      return this.working || this.editingPlatformsAjaxPending
     },
 
     ...mapGetters([
@@ -87,8 +94,16 @@ export default {
   },
 
   methods: {
+    handleInput (e) {
+      let key = e.target.name
+      if (key in this.editingPlatform) {
+        this.editingPlatform[key] = e.target.value
+      }
+    },
+
     /** Callback for clicking the 'edit' button; simply change to 'editing' state. */
     onEditClick () {
+      this.editingPlatform = cloneDeep(this.originalPlatform)
       this.editing = true
     },
 
@@ -104,7 +119,7 @@ export default {
         this.apiError = ''
         Loading.show({ message: 'Deleting Platform...' })
 
-        this.deletePlatform(this.platform.id)
+        this.deletePlatform(this.editingPlatform.id)
           .then(() => {
             toasts.deleteConfirm('Platform')
             this.$router.push(localUrls.platformsList)
@@ -116,19 +131,28 @@ export default {
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const updatedData = PlatformModel.toAPI(value)
+      const platform = PlatformModel.toAPI(this.editingPlatform)
+      const hasChanges = !areEqual(platform, this.originalPlatform)
+      const { errors, valid } = validate(platform)
 
-      this.working = true
-      this.apiError = ''
-      Loading.show({ message: 'Saving Platform...' })
+      if (valid && hasChanges) {
+        this.working = true
+        this.apiError = ''
+        Loading.show({ message: 'Saving Platform...' })
 
-      this.updatePlatform(updatedData)
-        .then(() => {
-          toasts.updateConfirm('Platform')
-          this.$router.push(localUrls.platformsList)
-          this.working = false
-          Loading.hide()
-        }, err => { this.onError(err) })
+        this.updatePlatform(platform)
+          .then(() => {
+            toasts.updateConfirm('Platform')
+            this.$router.push(localUrls.platformsList)
+            this.working = false
+            Loading.hide()
+          }, err => { this.onError(err) })
+      } else {
+        if (!hasChanges) {
+          toasts.noChanges()
+        }
+        this.errors = errors
+      }
     },
 
     /** Callback for 'cancel' button on form; simply cancel the 'editing' state. */
@@ -164,7 +188,8 @@ export default {
         } else {
           this.findPlatform(platformId)
             .then(platformRes => {
-              this.platform = cloneDeep(platformRes)
+              this.editingPlatform = cloneDeep(platformRes)
+              this.originalPlatform = cloneDeep(platformRes)
               this.working = false
               this.initializing = false
               Loading.hide()

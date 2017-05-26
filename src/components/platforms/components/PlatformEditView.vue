@@ -3,6 +3,8 @@
     <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
     <app-platform-form
       :working="working"
+      :errors="errors"
+      :handleInput="handleInput"
       :originalPlatform="platform"
       @submitted="onFormSubmitted"
       @cancelled="onFormCancelled">
@@ -33,6 +35,14 @@ export default {
     platform: {
       type: Object,
       required: true
+    },
+    errors: {
+      type: Object,
+      required: false
+    },
+    handleInput: {
+      type: Function,
+      required: false
     }
   },
 
