@@ -9,7 +9,7 @@ export function validate (data) {
   let errors = UserLoginModel.emptyValidationErrors()
   let testData = cloneDeep(data)
 
-  // validate title -> required
+  // validate username -> required
   if (validator.isEmpty(testData.username)) {
     errors.username = valErrs.required
     valid = false

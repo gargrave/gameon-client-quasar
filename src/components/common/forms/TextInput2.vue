@@ -74,12 +74,6 @@ export default {
       type: Function,
       required: false
     }
-  },
-
-  methods: {
-    handleChange (e) {
-      console.log(e.target.value)
-    }
   }
 }
 </script>
