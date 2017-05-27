@@ -1,6 +1,7 @@
 <template>
   <transition name="fade">
     <div class="layout-view">
+
       <div class="row justify-center">
         <!-- 'add a platform' button -->
         <button
@@ -8,17 +9,24 @@
           @click="onAddClick">
           Add a Platform
         </button>
-      </div>
-
-      <div class="row justify-center"
-        v-for="platform in platforms">
-
-        <app-platform-card
-          :platform="platform"
-          @click="onPlatformClick">
-        </app-platform-card>
-
       </div><!-- /row -->
+
+      <section v-if="platforms.length">
+        <div
+          class="row justify-center"
+          v-for="platform in platforms">
+          <app-platform-card
+            :platform="platform"
+            @click="onPlatformClick">
+          </app-platform-card>
+        </div><!-- /row -->
+      </section>
+
+      <app-empty-list-card
+        v-else
+        itemName="Platforms">
+      </app-empty-list-card>
+
     </div><!-- /layout-view -->
   </transition>
 </template>
@@ -29,10 +37,12 @@ import { Loading } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
+import EmptyListCard from '../../common/EmptyListCard'
 import PlatformCard from '../components/PlatformListCard'
 
 export default {
   components: {
+    appEmptyListCard: EmptyListCard,
     appPlatformCard: PlatformCard
   },
 

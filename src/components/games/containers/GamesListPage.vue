@@ -1,6 +1,7 @@
 <template>
   <transition name="fade">
     <div class="layout-view">
+
       <div class="row justify-center">
         <!-- 'add a game' button -->
         <button
@@ -8,17 +9,24 @@
           @click="onAddClick">
           Add a Game
         </button>
-      </div>
-
-      <div class="row justify-center"
-        v-for="game in games">
-
-        <app-game-card
-          :game="game"
-          @click="onGameClick">
-        </app-game-card>
-
       </div><!-- /row -->
+
+      <section v-if="games.length">
+        <div
+          class="row justify-center"
+          v-for="game in games">
+          <app-game-card
+            :game="game"
+            @click="onGameClick">
+          </app-game-card>
+        </div><!-- /row -->
+      </section>
+
+      <app-empty-list-card
+        v-else
+        itemName="Games">
+      </app-empty-list-card>
+
     </div><!-- /layout-view -->
   </transition>
 </template>
@@ -29,10 +37,12 @@ import { Loading } from 'quasar'
 
 import { localUrls } from '../../../globals/urls'
 
+import EmptyListCard from '../../common/EmptyListCard'
 import GameCard from '../components/GameListCard'
 
 export default {
   components: {
+    appEmptyListCard: EmptyListCard,
     appGameCard: GameCard
   },
 
