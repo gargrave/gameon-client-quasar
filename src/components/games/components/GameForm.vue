@@ -1,14 +1,14 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="$emit('submitted')">
 
     <!-- title input -->
     <app-text-input
-      ref="title"
       name="title"
       label="Title"
       maxlength="128"
-      :initialValue="originalGame && originalGame.title || ''"
-      :error="errors.title">
+      :value="game.title"
+      :error="errors.title"
+      :handleInput="handleInput">
     </app-text-input>
 
     <!-- platform selector -->
@@ -20,8 +20,9 @@
         :class="{ 'has-error': errors.platform }"
         name="platform"
         type="list"
-        v-model="selectedPlatform"
-        :options="platformsForSelect">
+        :value="game.platform"
+        :options="platformsForSelect"
+        @input="handleSelect">
       </q-select>
       <p class="form-error">{{ errors.platform }}</p>
     </div>
@@ -29,16 +30,19 @@
     <!-- 'finished' checkbox -->
     <div class="form-group">
       <label>
-        <q-checkbox v-model="modelData.finished"></q-checkbox>
+        <q-checkbox
+          :value="game.finished"
+          @input="handleCheck">
+        </q-checkbox>
         Finished
       </label>
     </div>
 
     <div class="form-group">
       <app-game-date-picker
-        ref="dateEditor"
+        ref="datepicker"
         :working="working"
-        :dates="datesForDatePicker">
+        :dates="game.dates">
       </app-game-date-picker>
     </div>
 
@@ -53,7 +57,7 @@
     <button
       class="secondary pull-right"
       type="button"
-      @click.prevent="onCancel">
+      @click.prevent="$emit('cancelled')">
       Cancel
     </button>
 
@@ -61,13 +65,7 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash'
-
-import toast from '../../../globals/toasts'
-import { areEqual, validate } from '../utils/gameValidator'
-import GameModel from '../../../models/game'
-
-import TextInput from '../../common/forms/TextInput'
+import TextInput from '../../common/forms/TextInput2'
 import GameDatePicker from './GameDatePicker'
 
 export default {
@@ -78,29 +76,23 @@ export default {
 
   props: {
     // whether any operations are currently running
-    working: {
-      type: Boolean,
-      required: true
-    },
+    working: { type: Boolean, required: true },
+    // local validation errors
+    errors: { type: Object, required: true },
     // the game (if any) being edited
-    originalGame: {
-      type: Object,
-      required: false
-    },
+    game: { type: Object, required: false },
     // list of available platforms
-    platforms: {
-      type: Array,
-      required: true
-    }
+    platforms: { type: Array, required: true },
+    // callback for text input changing
+    handleInput: { type: Function, required: true },
+    // callback for text select changing
+    handleSelect: { type: Function, required: true },
+    // callback for text checkbox changing
+    handleCheck: { type: Function, required: true }
   },
 
-  data: () => ({
-    modelData: GameModel.empty(),
-    errors: GameModel.emptyValidationErrors(),
-    selectedPlatform: ''
-  }),
-
   computed: {
+    /* builds the platforms list in the format required by q-select */
     platformsForSelect () {
       return this.platforms.map((p) => {
         return {
@@ -109,63 +101,6 @@ export default {
           value: p.title
         }
       })
-    },
-
-    datesForDatePicker () {
-      return this.originalGame ? this.originalGame.dates : []
-    }
-  },
-
-  methods: {
-    /** Builds the data structure required for submitting an update to the current Game */
-    buildPayload () {
-      let submitData = cloneDeep(this.modelData)
-      submitData.title = this.$refs.title.model
-
-      // set the platform; we need to parse this from a string to the full Platform object
-      submitData.platform = this.platforms.find((p) =>
-        p.title === this.selectedPlatform
-      )
-
-      // set the dates to the computed dates list (i.e. accounting for added/removed)
-      submitData.dates = this.$refs['dateEditor'].getDatesList()
-
-      // if any dates have been marked to be removed, add that list
-      const datesRemoved = this.$refs['dateEditor'].getRemovedDatesList()
-      if (datesRemoved.length) {
-        submitData.datesRemoved = datesRemoved
-      }
-
-      return submitData
-    },
-
-    /** Callback for submit button; if data validates, emit the 'submitted' event. */
-    onSubmit () {
-      const payload = this.buildPayload()
-      const hasChanges = !this.originalGame || !areEqual(payload, this.originalGame)
-      const { errors, valid } = validate(payload)
-
-      if (valid && hasChanges) {
-        this.$emit('submitted', payload)
-      } else {
-        if (!hasChanges) {
-          toast.noChanges()
-        }
-        this.errors = errors
-      }
-    },
-
-    /** Callback for cancel button; simply emit the 'cancelled' event. */
-    onCancel () {
-      this.$emit('cancelled')
-    }
-  },
-
-  created () {
-    // if we received an 'originalGame' prop, we are editing an existing one, so make a clone of it
-    if (this.originalGame) {
-      this.modelData = cloneDeep(this.originalGame)
-      this.selectedPlatform = this.modelData.platform.title
     }
   }
 }
