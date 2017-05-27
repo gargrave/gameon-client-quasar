@@ -15,6 +15,12 @@ export function validate (data) {
     valid = false
   }
 
+  // validate platform -> required
+  if (!testData.platform) {
+    errors.platform = valErrs.required
+    valid = false
+  }
+
   return { valid, errors }
 }
 
