@@ -6,14 +6,14 @@
         <div class="card">
 
           <div class="card-title bg-primary text-white">
-            {{ originalPlatform.title }}
+            {{ originalModel.title }}
           </div><!-- /card-title -->
 
           <app-platform-edit-view
             v-if="editing"
             :working="working"
             :apiError="apiError"
-            :platform="editingPlatform"
+            :platform="model"
             :errors="errors"
             :handleInput="handleInput"
             @onFormSubmitted="onFormSubmitted"
@@ -22,7 +22,7 @@
 
           <app-platform-detail-view
             v-else
-            :platform="originalPlatform"
+            :platform="originalModel"
             @editClicked="onEditClick"
             @backClicked="onBackClick">
           </app-platform-detail-view>
@@ -76,9 +76,9 @@ export default {
     // whether we are in editing or viewing mode
     editing: false,
     // the working copy of the instance
-    editingPlatform: PlatformModel.empty(),
+    model: PlatformModel.empty(),
     // the untouched copy of the original instance
-    originalPlatform: PlatformModel.empty(),
+    originalModel: PlatformModel.empty(),
     // local validation errors
     errors: PlatformModel.emptyValidationErrors()
   }),
@@ -96,14 +96,14 @@ export default {
   methods: {
     handleInput (e) {
       let key = e.target.name
-      if (key in this.editingPlatform) {
-        this.editingPlatform[key] = e.target.value
+      if (key in this.model) {
+        this.model[key] = e.target.value
       }
     },
 
     /** Callback for clicking the 'edit' button; simply change to 'editing' state. */
     onEditClick () {
-      this.editingPlatform = cloneDeep(this.originalPlatform)
+      this.model = cloneDeep(this.originalModel)
       this.editing = true
     },
 
@@ -119,7 +119,7 @@ export default {
         this.apiError = ''
         Loading.show({ message: 'Deleting Platform...' })
 
-        this.deletePlatform(this.editingPlatform.id)
+        this.deletePlatform(this.model.id)
           .then(() => {
             toasts.deleteConfirm('Platform')
             this.$router.push(localUrls.platformsList)
@@ -131,8 +131,8 @@ export default {
 
     /** Attempts to submit the current user data to the API to login. */
     onFormSubmitted (value, event) {
-      const platform = PlatformModel.toAPI(this.editingPlatform)
-      const hasChanges = !areEqual(platform, this.originalPlatform)
+      const platform = PlatformModel.toAPI(this.model)
+      const hasChanges = !areEqual(platform, this.originalModel)
       const { errors, valid } = validate(platform)
 
       if (valid && hasChanges) {
@@ -155,8 +155,12 @@ export default {
       }
     },
 
-    /** Callback for 'cancel' button on form; simply cancel the 'editing' state. */
+    /**
+     * Callback for 'cancel' button on form;
+     * cancel the 'editing' state and revert the model.
+     */
     onFormCancelled (value, event) {
+      this.model = cloneDeep(this.originalModel)
       this.editing = false
     },
 
@@ -188,8 +192,8 @@ export default {
         } else {
           this.findPlatform(platformId)
             .then(platformRes => {
-              this.editingPlatform = cloneDeep(platformRes)
-              this.originalPlatform = cloneDeep(platformRes)
+              this.model = cloneDeep(platformRes)
+              this.originalModel = cloneDeep(platformRes)
               this.working = false
               this.initializing = false
               Loading.hide()
