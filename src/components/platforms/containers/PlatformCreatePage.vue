@@ -14,6 +14,7 @@
             <app-platform-form
               :working="working"
               :errors="errors"
+              :platform="model"
               :handleInput="handleInput"
               @submitted="onFormSubmitted"
               @cancelled="onFormCancelled">
@@ -49,8 +50,8 @@ export default {
     working: false,
     // error messages returned from API (e.g. invalid data)
     apiError: '',
-    // model for new Platform
-    platform: PlatformModel.empty(),
+    // model for new instance
+    model: PlatformModel.empty(),
     // local validation errors
     errors: PlatformModel.emptyValidationErrors()
   }),
@@ -58,14 +59,14 @@ export default {
   methods: {
     handleInput (e) {
       let key = e.target.name
-      if (key in this.platform) {
-        this.platform[key] = e.target.value
+      if (key in this.model) {
+        this.model[key] = e.target.value
       }
     },
 
     /** Callback for 'submit' event from the form; attempt to create a new instance on the server. */
     onFormSubmitted (value) {
-      const platform = PlatformModel.toAPI(this.platform)
+      const platform = PlatformModel.toAPI(this.model)
       const { errors, valid } = validate(platform)
 
       if (valid) {
