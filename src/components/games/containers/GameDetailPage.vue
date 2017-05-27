@@ -6,22 +6,27 @@
         <div class="card">
 
           <div class="card-title bg-primary text-white">
-            {{ game.title }}
+            {{ originalModel.title }}
           </div><!-- /card-title -->
 
           <app-game-edit-view
             v-if="editing"
-            :working="working"
+            ref="editView"
             :apiError="apiError"
-            :game="game"
+            :working="working"
+            :errors="errors"
+            :game="model"
             :platforms="platforms"
+            :handleInput="handleInput"
+            :handleSelect="handleSelect"
+            :handleCheck="handleCheck"
             @onFormSubmitted="onFormSubmitted"
             @onFormCancelled="onFormCancelled">
           </app-game-edit-view>
 
           <app-game-detail-view
             v-else
-            :game="game"
+            :game="model"
             @editClicked="onEditClick"
             @backClicked="onBackClick">
           </app-game-detail-view>
@@ -55,6 +60,7 @@ import dialogs from '../../../globals/dialogs'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 import GameModel from '../../../models/game'
+import { areEqual, validate } from '../utils/gameValidator'
 
 import GameDetailView from '../components/GameDetailView'
 import GameEditView from '../components/GameEditView'
@@ -74,7 +80,11 @@ export default {
     // whether we are in editing or viewing mode
     editing: false,
     // the working copy of the instance
-    game: GameModel.empty()
+    model: GameModel.empty(),
+    // the untouched copy of the original instance
+    originalModel: GameModel.empty(),
+    // local validation errors
+    errors: GameModel.emptyValidationErrors()
   }),
 
   computed: {
@@ -89,6 +99,24 @@ export default {
   },
 
   methods: {
+    /** callback for handling changes to input fields */
+    handleInput (e) {
+      let key = e.target.name
+      if (key in this.model) {
+        this.model[key] = e.target.value
+      }
+    },
+
+    /** callback for handling changes to select fields */
+    handleSelect (value) {
+      this.model.platform = value
+    },
+
+    /** callback for handling changes to checkbox fields */
+    handleCheck (value) {
+      this.model.finished = value
+    },
+
     /** Callback for clicking the 'edit' button; simply change to 'editing' state. */
     onEditClick () {
       this.editing = true
@@ -106,7 +134,7 @@ export default {
         this.apiError = ''
         Loading.show({ message: 'Deleting Game...' })
 
-        this.deleteGame(this.game.id)
+        this.deleteGame(this.model.id)
           .then(() => {
             toasts.deleteConfirm('Game')
             this.$router.push(localUrls.gamesList)
@@ -116,24 +144,59 @@ export default {
       })
     },
 
-    /** Attempts to submit the current user data to the API to login. */
-    onFormSubmitted (value, event) {
-      const updatedData = GameModel.toAPI(value)
+    /**
+     * prebuilds the request payload before verification; some of the fields (e.g. Platform)
+     * need special parsing before going through validation
+     */
+    prebuildPayload (data, updateDates = true) {
+      let payload = cloneDeep(data)
 
-      this.working = true
-      this.apiError = ''
-      Loading.show({ message: 'Saving Game...' })
+      // parse Platform from its title (string) to its ID (int)
+      const platform = this.platforms.find(p => p.title === data.platform)
+      payload.platform = platform ? platform.id : null
 
-      this.updateGame(updatedData)
-        .then(() => {
-          toasts.updateConfirm('Game')
-          this.$router.push(localUrls.gamesList)
-          this.working = false
-        }, err => { this.onError(err) })
+      if (updateDates) {
+        // get lists of dates from embedded datepicker
+        const datepicker = this.$refs.editView.$refs.form.$refs.datepicker
+        payload.dates = datepicker.getDatesList()
+        payload.datesRemoved = datepicker.getRemovedDatesList()
+      }
+      return payload
     },
 
-    /** Callback for 'cancel' button on form; simply cancel the 'editing' state. */
+    /** Attempts to submit the current user data to the API to login. */
+    onFormSubmitted (value, event) {
+      const payload = this.prebuildPayload(this.model)
+      const game = GameModel.toAPI(payload)
+      const compareTo = this.prebuildPayload(this.originalModel, false)
+      const hasChanges = !areEqual(game, compareTo)
+      const { errors, valid } = validate(game)
+
+      if (valid && hasChanges) {
+        this.working = true
+        this.apiError = ''
+        Loading.show({ message: 'Saving Game...' })
+
+        this.updateGame(game)
+          .then(() => {
+            toasts.updateConfirm('Game')
+            this.$router.push(localUrls.gamesList)
+            this.working = false
+          }, err => { this.onError(err) })
+      } else {
+        if (!hasChanges) {
+          toasts.noChanges()
+        }
+        this.errors = errors
+      }
+    },
+
+    /**
+     * Callback for 'cancel' button on form;
+     * cancel the 'editing' state and revert the model.
+     */
     onFormCancelled (value, event) {
+      this.model = cloneDeep(this.originalModel)
       this.editing = false
     },
 
@@ -165,8 +228,11 @@ export default {
         } else {
           this.findGame(gameId)
             .then(gameRes => {
-              this.game = cloneDeep(gameRes)
-              this.game.dates.sort().reverse()
+              this.model = Object.assign({},
+                cloneDeep(gameRes),
+                { platform: gameRes.platform.title }
+              )
+              this.originalModel = cloneDeep(this.model)
               this.working = false
               this.initializing = false
               Loading.hide()

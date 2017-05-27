@@ -2,9 +2,14 @@
   <div class="card-content">
     <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
     <app-game-form
+      ref="form"
       :working="working"
-      :originalGame="game"
+      :errors="errors"
+      :game="game"
       :platforms="platforms"
+      :handleInput="handleInput"
+      :handleSelect="handleSelect"
+      :handleCheck="handleCheck"
       @submitted="onFormSubmitted"
       @cancelled="onFormCancelled">
     </app-game-form>
@@ -20,26 +25,22 @@ export default {
   },
 
   props: {
-    working: {
-      type: Boolean,
-      required: true
-    },
     // any error messages from the API
-    apiError: {
-      type: String,
-      required: false,
-      default: ''
-    },
+    apiError: { type: String, required: false, default: '' },
+    // whether any operations are currently running
+    working: { type: Boolean, required: true },
+    // local validation errors
+    errors: { type: Object, required: true },
     // the Game object being edited
-    game: {
-      type: Object,
-      required: true
-    },
+    game: { type: Object, required: true },
     // list of available platforms
-    platforms: {
-      type: Array,
-      required: true
-    }
+    platforms: { type: Array, required: true },
+    // callback for text input changing
+    handleInput: { type: Function, required: true },
+    // callback for text select changing
+    handleSelect: { type: Function, required: true },
+    // callback for text checkbox changing
+    handleCheck: { type: Function, required: true }
   },
 
   methods: {

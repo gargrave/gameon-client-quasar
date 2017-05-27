@@ -1,7 +1,7 @@
 <template>
   <div class="card-content">
     <p><strong>Name:</strong> {{ game.title }}</p>
-    <p><strong>Platform:</strong> {{ game.platform.title }}</p>
+    <p><strong>Platform:</strong> {{ game.platform }}</p>
     <hr>
     <p><strong>Played:</strong> {{ playCountString }}</p>
     <p><strong>Last Played:</strong> {{ lastPlayedString }}</p>
@@ -29,10 +29,7 @@ import dateHelper from '../../../utils/dateHelper'
 
 export default {
   props: {
-    game: {
-      type: Object,
-      required: true
-    }
+    game: { type: Object, required: true }
   },
 
   computed: {
@@ -56,11 +53,6 @@ export default {
     updatedOnString () {
       return dateHelper.cleanDateWithTrailingDay(this.game.modified)
     }
-  },
-
-  created () {
-    console.log('this.game:')
-    console.log(this.game)
   }
 }
 </script>
