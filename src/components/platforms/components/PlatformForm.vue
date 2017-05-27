@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import TextInput from '../../common/forms/TextInput2'
+import TextInput from '../../common/forms/TextInput'
 
 export default {
   components: {

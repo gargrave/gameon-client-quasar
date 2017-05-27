@@ -11,7 +11,8 @@
       :name="name"
       :placeholder="label"
       :maxlength="maxlength"
-      v-model.trim="model">
+      :value="value"
+      @input="handleInput">
 
       <!-- password input -->
       <input
@@ -22,7 +23,8 @@
         :name="name"
         :placeholder="label"
         :maxlength="maxlength"
-        v-model.trim="model">
+        :value="value"
+        @input="handleInput">
 
     <p class="form-error">{{ error }}</p>
   </div>
@@ -32,54 +34,19 @@
 export default {
   props: {
     // type 'type' for the input field (text/password)
-    type: {
-      type: String,
-      required: false,
-      default: 'text'
-    },
-
+    type: { type: String, required: false, default: 'text' },
     // the value to use for the 'name' property
-    name: {
-      type: String,
-      required: true
-    },
-
+    name: { type: String, required: true },
     // the (optional) label to place next to input
-    label: {
-      type: String,
-      required: false
-    },
-
-    initialValue: {
-      type: String,
-      required: false
-    },
-
+    label: { type: String, required: false },
+    // the value to bind to
+    value: { type: String, required: false },
     // error message (if any) pertaining to this field
-    error: {
-      type: String,
-      required: true
-    },
-
+    error: { type: String, required: true },
     // optional maxlength property
-    maxlength: {
-      type: String,
-      required: false,
-      default: '256'
-    }
-  },
-
-  data () {
-    return {
-      model: ''
-    }
-  },
-
-  created () {
-    // if an 'initialValue' is provided, set the model to that value
-    if (this.initialValue) {
-      this.model = this.initialValue
-    }
+    maxlength: { type: String, required: false, default: '256' },
+    // callback for text input changing
+    handleInput: { type: Function, required: false }
   }
 }
 </script>

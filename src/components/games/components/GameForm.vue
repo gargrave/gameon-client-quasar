@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import TextInput from '../../common/forms/TextInput2'
+import TextInput from '../../common/forms/TextInput'
 import GameDatePicker from './GameDatePicker'
 
 export default {
