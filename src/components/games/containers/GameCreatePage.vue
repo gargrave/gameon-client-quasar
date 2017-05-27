@@ -9,7 +9,9 @@
             Create a Game
           </div><!-- /card-title -->
 
-          <div class="card-content">
+          <div
+            v-if="platforms.length"
+            class="card-content">
             <p v-if="apiError" class="apiError">Error: {{ apiError }}</p>
             <app-game-form
               ref="form"
@@ -23,7 +25,18 @@
               @submitted="onFormSubmitted"
               @cancelled="onFormCancelled">
             </app-game-form>
-          </div><!-- /card-content -->
+          </div><!-- /card-content with form -->
+
+          <div
+            v-else
+            class="card-content text-center">
+            <p>Oops! You must have at least one Platform before adding a new Game.</p>
+            <button
+              class="positive"
+              @click="onAddPlatformClick">
+              Add a Platform
+            </button>
+          </div><!-- /card-content with form -->
 
         </div><!-- /card -->
 
@@ -131,6 +144,11 @@ export default {
     /** Callback for 'cancelled' event from the form; simply go back to list page. */
     onFormCancelled () {
       this.$router.push(localUrls.gamesList)
+    },
+
+    /** Callback for 'add new platform' button click event */
+    onAddPlatformClick () {
+      this.$router.push(localUrls.platformCreate)
     },
 
     /** Handle any errors received from calls to the API */
