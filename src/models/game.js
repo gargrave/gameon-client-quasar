@@ -8,14 +8,14 @@ export function parsePlatform (game) {
       return game.platform.id
     }
   }
-  throw new TypeError('Game does not have valid Platform data.')
+  return null
 }
 
 export default {
   empty () {
     return {
       title: '',
-      platform: undefined,
+      platform: '',
       finished: false,
       dates: [],
       datesAdded: [],
