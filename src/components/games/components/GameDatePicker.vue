@@ -47,14 +47,8 @@
 export default {
   props: {
     // whether any operations are currently running
-    working: {
-      type: Boolean,
-      required: true
-    },
-    dates: {
-      type: Array,
-      required: true
-    }
+    working: { type: Boolean, required: true },
+    dates: { type: Array, required: true }
   },
 
   data: () => ({

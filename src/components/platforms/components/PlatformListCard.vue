@@ -14,10 +14,7 @@
 export default {
   props: {
     // the Platform object for this instance
-    platform: {
-      type: Object,
-      required: true
-    }
+    platform: { type: Object, required: true }
   }
 }
 </script>

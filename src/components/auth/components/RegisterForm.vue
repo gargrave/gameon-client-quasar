@@ -66,25 +66,13 @@ export default {
 
   props: {
     // whether any operations are currently running
-    working: {
-      type: Boolean,
-      required: true
-    },
+    working: { type: Boolean, required: true },
     // collection of validation errors
-    errors: {
-      type: Object,
-      required: true
-    },
+    errors: { type: Object, required: true },
     // user data model
-    user: {
-      type: Object,
-      required: true
-    },
+    user: { type: Object, required: true },
     // callback for text input changing
-    handleInput: {
-      type: Function,
-      required: true
-    }
+    handleInput: { type: Function, required: true }
   }
 }
 </script>

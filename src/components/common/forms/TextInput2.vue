@@ -34,46 +34,19 @@
 export default {
   props: {
     // type 'type' for the input field (text/password)
-    type: {
-      type: String,
-      required: false,
-      default: 'text'
-    },
-
+    type: { type: String, required: false, default: 'text' },
     // the value to use for the 'name' property
-    name: {
-      type: String,
-      required: true
-    },
-
+    name: { type: String, required: true },
     // the (optional) label to place next to input
-    label: {
-      type: String,
-      required: false
-    },
-
-    value: {
-      type: String,
-      required: false
-    },
-
+    label: { type: String, required: false },
+    // the value to bind to
+    value: { type: String, required: false },
     // error message (if any) pertaining to this field
-    error: {
-      type: String,
-      required: true
-    },
-
+    error: { type: String, required: true },
     // optional maxlength property
-    maxlength: {
-      type: String,
-      required: false,
-      default: '256'
-    },
-
-    handleInput: {
-      type: Function,
-      required: false
-    }
+    maxlength: { type: String, required: false, default: '256' },
+    // callback for text input changing
+    handleInput: { type: Function, required: false }
   }
 }
 </script>

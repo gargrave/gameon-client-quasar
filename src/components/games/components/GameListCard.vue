@@ -28,10 +28,7 @@ import dateHelper from '../../../utils/dateHelper'
 export default {
   props: {
     // the Game object for this instance
-    game: {
-      type: Object,
-      required: true
-    }
+    game: { type: Object, required: true }
   },
 
   computed: {

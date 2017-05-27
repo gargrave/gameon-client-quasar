@@ -21,10 +21,8 @@
 <script>
 export default {
   props: {
-    platform: {
-      type: Object,
-      required: true
-    }
+     // the Platform object being viewed
+    platform: { type: Object, required: true }
   }
 }
 </script>

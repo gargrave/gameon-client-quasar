@@ -23,14 +23,8 @@
 <script>
 export default {
   props: {
-    userData: {
-      type: Object,
-      required: true
-    },
-    profile: {
-      type: Object,
-      required: true
-    }
+    userData: { type: Object, required: true },
+    profile: { type: Object, required: true }
   }
 }
 </script>

@@ -21,29 +21,16 @@ export default {
   },
 
   props: {
-    working: {
-      type: Boolean,
-      required: true
-    },
     // any error messages from the API
-    apiError: {
-      type: String,
-      required: false,
-      default: ''
-    },
+    apiError: { type: String, required: false, default: '' },
+    // whether any operations are currently running
+    working: { type: Boolean, required: true },
+    // local validation errors
+    errors: { type: Object, required: true },
     // the Platform object being edited
-    platform: {
-      type: Object,
-      required: true
-    },
-    errors: {
-      type: Object,
-      required: false
-    },
-    handleInput: {
-      type: Function,
-      required: false
-    }
+    platform: { type: Object, required: true },
+    // callback for text input changing
+    handleInput: { type: Function, required: true }
   },
 
   methods: {
