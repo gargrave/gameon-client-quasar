@@ -35,7 +35,9 @@
 
       </div><!-- /row -->
 
-      <div class="row justify-center">
+      <div
+        v-if="editing"
+        class="row justify-center">
         <div class="card">
           <div class="card-content">
             <button
