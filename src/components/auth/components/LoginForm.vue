@@ -3,7 +3,6 @@
 
     <!-- username input -->
     <app-text-input
-      ref="username"
       name="username"
       label="Username"
       :error="errors.username"
@@ -13,7 +12,6 @@
 
     <!-- password input -->
     <app-text-input
-      ref="password"
       type="password"
       name="password"
       label="Password"

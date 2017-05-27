@@ -3,7 +3,6 @@
 
     <!-- title input -->
     <app-text-input
-      ref="title"
       name="title"
       label="Title"
       maxlength="128"
