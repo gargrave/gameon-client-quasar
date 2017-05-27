@@ -38,25 +38,13 @@ export default {
 
   props: {
     // whether any operations are currently running
-    working: {
-      type: Boolean,
-      required: true
-    },
+    working: { type: Boolean, required: true },
     // local validation errors
-    errors: {
-      type: Object,
-      required: true
-    },
+    errors: { type: Object, required: true },
     // the platform (if any) being edited
-    originalPlatform: {
-      type: Object,
-      required: false
-    },
+    originalPlatform: { type: Object, required: false },
     // callback for text input changing
-    handleInput: {
-      type: Function,
-      required: true
-    }
+    handleInput: { type: Function, required: true }
   }
 }
 </script>
