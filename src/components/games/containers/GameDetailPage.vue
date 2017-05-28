@@ -49,6 +49,16 @@
         </div><!-- /card -->
       </div><!-- /row -->
 
+      <div
+        v-if="!editing && !initializing"
+        class="row justify-center">
+        <app-add-today-button
+          :working="isWorking"
+          :hasToday="hasToday"
+          :handleClick="handleAddRemoveToday">
+        </app-add-today-button>
+      </div>
+
     </div><!-- /layout-view -->
   </transition>
 </template>
@@ -62,13 +72,16 @@ import dialogs from '../../../globals/dialogs'
 import toasts from '../../../globals/toasts'
 import { localUrls } from '../../../globals/urls'
 import GameModel from '../../../models/game'
+import dateHelper from '../../../utils/dateHelper'
 import { areEqual, validate } from '../utils/gameValidator'
 
+import AddTodayButton from '../components/AddTodayButton'
 import GameDetailView from '../components/GameDetailView'
 import GameEditView from '../components/GameEditView'
 
 export default {
   components: {
+    appAddTodayButton: AddTodayButton,
     appGameDetailView: GameDetailView,
     appGameEditView: GameEditView
   },
@@ -94,6 +107,10 @@ export default {
       return this.working || this.gamesAjaxPending
     },
 
+    hasToday () {
+      return this.model.dates.includes(dateHelper.todayDateString())
+    },
+
     ...mapGetters([
       'gamesAjaxPending',
       'platforms'
@@ -101,6 +118,29 @@ export default {
   },
 
   methods: {
+    rebuildModel () {
+      const gameId = this.$route.params.id
+      if (!gameId) {
+        this.$router.push(localUrls.gamesList)
+      } else {
+        this.findGame(gameId)
+          .then(gameRes => {
+            this.model = Object.assign({},
+              cloneDeep(gameRes),
+              { platform: gameRes.platform.title }
+            )
+            this.originalModel = cloneDeep(this.model)
+            this.working = false
+            this.editing = false
+            this.initializing = false
+            Loading.hide()
+          }, () => {
+            // if no valid instance, return to the List view
+            this.$router.push(localUrls.gamesList)
+          })
+      }
+    },
+
     /** callback for handling changes to input fields */
     handleInput (e) {
       let key = e.target.name
@@ -117,6 +157,20 @@ export default {
     /** callback for handling changes to checkbox fields */
     handleCheck (value) {
       this.model.finished = value
+    },
+
+    handleAddRemoveToday () {
+      const payload = this.prebuildPayload(this.model, false)
+      const today = dateHelper.todayDateString()
+
+      if (this.hasToday) {
+        payload.dates = payload.dates.filter(d => d !== today)
+        payload.datesRemoved.push(today)
+      } else {
+        payload.dates.push(today)
+        payload.dates.sort().reverse()
+      }
+      this.saveUpdate(GameModel.toAPI(payload))
     },
 
     /** Callback for clicking the 'edit' button; simply change to 'editing' state. */
@@ -175,22 +229,25 @@ export default {
       const { errors, valid } = validate(game)
 
       if (valid && hasChanges) {
-        this.working = true
-        this.apiError = ''
-        Loading.show({ message: 'Saving Game...' })
-
-        this.updateGame(game)
-          .then(() => {
-            toasts.updateConfirm('Game')
-            this.$router.push(localUrls.gamesList)
-            this.working = false
-          }, err => { this.onError(err) })
+        this.saveUpdate(game)
       } else {
         if (!hasChanges) {
           toasts.noChanges()
         }
         this.errors = errors
       }
+    },
+
+    saveUpdate (game) {
+      this.working = true
+      this.apiError = ''
+      Loading.show({ message: 'Saving Game...' })
+
+      this.updateGame(game)
+        .then(() => {
+          toasts.updateConfirm('Game')
+          this.rebuildModel()
+        }, err => { this.onError(err) })
     },
 
     /**
@@ -224,25 +281,7 @@ export default {
 
     this.checkForStoredLogin()
       .then(() => {
-        const gameId = this.$route.params.id
-        if (!gameId) {
-          this.$router.push(localUrls.gamesList)
-        } else {
-          this.findGame(gameId)
-            .then(gameRes => {
-              this.model = Object.assign({},
-                cloneDeep(gameRes),
-                { platform: gameRes.platform.title }
-              )
-              this.originalModel = cloneDeep(this.model)
-              this.working = false
-              this.initializing = false
-              Loading.hide()
-            }, () => {
-              // if no valid instance, return to the List view
-              this.$router.push(localUrls.gamesList)
-            })
-        }
+        this.rebuildModel()
       }, err => { this.onError(err) })
   }
 }
