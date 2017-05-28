@@ -11,21 +11,27 @@
         </button>
       </div><!-- /row -->
 
-      <section v-if="games.length">
-        <div
-          class="row justify-center"
-          v-for="game in games">
-          <app-game-card
-            :game="game"
-            @click="onGameClick">
-          </app-game-card>
-        </div><!-- /row -->
+      <section v-if="initializing">
+        <app-initializing-card></app-initializing-card>
       </section>
 
-      <app-empty-list-card
-        v-else
-        itemName="Games">
-      </app-empty-list-card>
+      <section v-else>
+        <section v-if="games.length">
+          <div
+            class="row justify-center"
+            v-for="game in games">
+            <app-game-card
+              :game="game"
+              @click="onGameClick">
+            </app-game-card>
+          </div><!-- /row -->
+        </section>
+
+        <app-empty-list-card
+          v-else
+          itemName="Games">
+        </app-empty-list-card>
+      </section>
 
     </div><!-- /layout-view -->
   </transition>
@@ -38,11 +44,13 @@ import { Loading } from 'quasar'
 import { localUrls } from '../../../globals/urls'
 
 import EmptyListCard from '../../common/EmptyListCard'
+import InitializingCard from '../../common/InitializingCard'
 import GameCard from '../components/GameListCard'
 
 export default {
   components: {
     appEmptyListCard: EmptyListCard,
+    appInitializingCard: InitializingCard,
     appGameCard: GameCard
   },
 
@@ -76,6 +84,7 @@ export default {
         .then(() => {
           this.working = false
           this.initializing = false
+
           Loading.hide()
         }, err => { this.onError(err) })
     },

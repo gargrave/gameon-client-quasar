@@ -11,21 +11,27 @@
         </button>
       </div><!-- /row -->
 
-      <section v-if="platforms.length">
-        <div
-          class="row justify-center"
-          v-for="platform in platforms">
-          <app-platform-card
-            :platform="platform"
-            @click="onPlatformClick">
-          </app-platform-card>
-        </div><!-- /row -->
+      <section v-if="initializing">
+        <app-initializing-card></app-initializing-card>
       </section>
 
-      <app-empty-list-card
-        v-else
-        itemName="Platforms">
-      </app-empty-list-card>
+      <section v-else>
+        <section v-if="platforms.length">
+          <div
+            class="row justify-center"
+            v-for="platform in platforms">
+            <app-platform-card
+              :platform="platform"
+              @click="onPlatformClick">
+            </app-platform-card>
+          </div><!-- /row -->
+        </section>
+
+        <app-empty-list-card
+          v-else
+          itemName="Platforms">
+        </app-empty-list-card>
+      </section>
 
     </div><!-- /layout-view -->
   </transition>
@@ -38,11 +44,13 @@ import { Loading } from 'quasar'
 import { localUrls } from '../../../globals/urls'
 
 import EmptyListCard from '../../common/EmptyListCard'
+import InitializingCard from '../../common/InitializingCard'
 import PlatformCard from '../components/PlatformListCard'
 
 export default {
   components: {
     appEmptyListCard: EmptyListCard,
+    appInitializingCard: InitializingCard,
     appPlatformCard: PlatformCard
   },
 
